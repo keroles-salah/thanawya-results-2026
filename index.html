@@ -161,8 +161,12 @@ body {
     <div class="footer">
         <p>بيانات الدور الأول 2026 &mdash; نتائج غير رسمية</p>
         <p class="count">عدد الطلاب: <strong dir="ltr">919,396</strong> طالب</p>
+        <p id="visitCount" style="margin-top:6px;font-size:0.82rem;color:#6366f1;">👁️ جاري تحميل الإحصائيات...</p>
     </div>
 </div>
+<script>
+(function(){try{fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics.json').then(r=>r.json()).then(d=>{document.getElementById('visitCount').textContent='👁️ '+d.total.toLocaleString('ar-EG')+' زائر للموقع';});}catch(e){document.getElementById('visitCount').textContent='';}})();
+</script>
 <script>
 // ===== Tab switching =====
 let currentTab = 'seating';
