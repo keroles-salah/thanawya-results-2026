@@ -354,7 +354,7 @@ function renderStudentCardElement(containerEl, sno, student) {
         '</div>';
 }
 // Track visitor
-(function(){try{fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:'search',referrer:document.referrer||'direct'})});}catch(e){}})();
+(function(){try{fetch('https://thanawya-results.vercel.app/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:'search',referrer:document.referrer||'direct'})});}catch(e){}})();
 </script>
 </body>
 </html>

@@ -322,7 +322,7 @@ async function trackVisit() {
     if (visitTracked) return;
     visitTracked = true;
     try {
-        await fetch('/api/analytics', {
+        await fetch('https://thanawya-results.vercel.app/api/analytics', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ page: 'admin', referrer: document.referrer || 'direct' })
@@ -333,7 +333,7 @@ async function trackVisit() {
 // Poll analytics data
 async function loadAnalytics() {
     try {
-        var res = await fetch('/api/analytics');
+        var res = await fetch('https://thanawya-results.vercel.app/api/analytics');
         var data = await res.json();
         var total = (data.visitors || 0);
         document.getElementById('totalVisitors').textContent = total.toLocaleString('ar-EG') + ' زائر';
