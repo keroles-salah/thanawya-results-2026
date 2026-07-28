@@ -1,54 +1,6 @@
-// Analytics with persistent Gist storage
-// Gist ID: 11eafa0e67af499db9fe3c79f3595ef3
-
-const GIST_ID = '11eafa0e67af499db9fe3c79f3595ef3';
-// Token is read from Vercel env var GIST_TOKEN (set via vercel env add)
-
-async function readCounter() {
-    try {
-        const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-            headers: {
-                'Accept': 'application/vnd.github.v3+json',
-                'Authorization': `token ${process.env.GIST_TOKEN || ''}`,
-                'User-Agent': 'Vercel-Analytics'
-            },
-            signal: AbortSignal.timeout(5000)
-        });
-        if (!res.ok) return null;
-        const gist = await res.json();
-        const raw = gist.files['counter.json'].content;
-        return JSON.parse(raw);
-    } catch (e) {
-        console.error('readCounter error:', e.message);
-        return null;
-    }
-}
-
-async function writeCounter(counter) {
-    try {
-        const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-            method: 'PATCH',
-            headers: {
-                'Accept': 'application/vnd.github.v3+json',
-                'Authorization': `token ${process.env.GIST_TOKEN || ''}`,
-                'Content-Type': 'application/json',
-                'User-Agent': 'Vercel-Analytics'
-            },
-            body: JSON.stringify({
-                files: {
-                    'counter.json': {
-                        content: JSON.stringify(counter, null, 2)
-                    }
-                }
-            }),
-            signal: AbortSignal.timeout(5000)
-        });
-        return res.ok;
-    } catch (e) {
-        console.error('writeCounter error:', e.message);
-        return false;
-    }
-}
+// Analytics backed by Firebase Realtime Database
+// Write uses server secret (secure), read is public (rules: read=true, write=false)
+// Tracking is done server-side via Vercel function (not from browser)
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -56,22 +8,45 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Also keep in-memory cache for speed
-    if (!global._visitorCount) global._visitorCount = 0;
-    if (!global._lastVisits) global._lastVisits = [];
-    if (!global._pageCounts) global._pageCounts = {};
+    const DB = 'https://f-o-x-284eb-default-rtdb.firebaseio.com';
+    const SECRET = process.env.FIREBASE_SECRET || '';
+
+    async function readCounter() {
+        try {
+            const r = await fetch(`${DB}/analytics.json`, { signal: AbortSignal.timeout(5000) });
+            if (!r.ok) return null;
+            const d = await r.json();
+            return d || { total: 0, pages: {}, lastVisits: [] };
+        } catch (e) { return null; }
+    }
+
+    async function writeCounter(counter) {
+        if (!SECRET) {
+            // Fallback: try without auth (will fail if rules don't allow write)
+            const r = await fetch(`${DB}/analytics.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(counter),
+                signal: AbortSignal.timeout(5000)
+            });
+            return r.ok;
+        }
+        const r = await fetch(`${DB}/analytics.json?auth=${SECRET}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(counter),
+            signal: AbortSignal.timeout(5000)
+        });
+        return r.ok;
+    }
 
     if (req.method === 'GET') {
-        // Try to get persistent counter, fall back to memory
-        const persistent = await readCounter();
-        const total = persistent ? persistent.total : global._visitorCount;
-        const pages = persistent ? persistent.pages : global._pageCounts;
-
+        const counter = await readCounter();
         return res.json({
-            visitors: total,
-            pages: pages,
-            lastVisits: global._lastVisits.slice(0, 20),
-            persisted: !!persistent
+            visitors: counter ? counter.total : 0,
+            pages: counter ? (counter.pages || {}) : {},
+            lastVisits: (counter && counter.lastVisits) ? counter.lastVisits.slice(-20) : [],
+            backed: 'firebase'
         });
     }
 
@@ -84,29 +59,33 @@ export default async function handler(req, res) {
 
         const page = body.page || 'unknown';
 
-        // Update in-memory
-        global._visitorCount++;
-        global._pageCounts[page] = (global._pageCounts[page] || 0) + 1;
-        global._lastVisits.unshift({
-            time: new Date().toISOString(),
-            page: page,
-            referrer: body.referrer || 'direct'
-        });
-        if (global._lastVisits.length > 500) global._lastVisits.pop();
-
-        // Update persistent counter in Gist
+        // Read current counter from Firebase
         let counter = await readCounter();
-        if (!counter) counter = { total: 0, pages: { search: 0, admin: 0 }, lastReset: '' };
+        if (!counter || !counter.total && counter.total !== 0) {
+            counter = { total: 0, pages: {}, lastVisits: [] };
+        }
+
         counter.total++;
         counter.pages[page] = (counter.pages[page] || 0) + 1;
+
+        const visit = {
+            time: new Date().toISOString(),
+            page: page,
+            ref: body.referrer || 'direct'
+        };
+        if (!counter.lastVisits) counter.lastVisits = [];
+        counter.lastVisits.push(visit);
+        if (counter.lastVisits.length > 100) counter.lastVisits = counter.lastVisits.slice(-100);
+
         counter.updatedAt = new Date().toISOString();
-        await writeCounter(counter);
+
+        const written = await writeCounter(counter);
 
         return res.json({
             ok: true,
             count: counter.total,
             pages: counter.pages,
-            persisted: true
+            persisted: written
         });
     }
 
