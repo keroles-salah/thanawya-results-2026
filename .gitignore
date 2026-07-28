@@ -1,0 +1,7 @@
+results.db
+server.py
+static/
+__pycache__/
+*.pyc
+.openclaw/
+.git/
