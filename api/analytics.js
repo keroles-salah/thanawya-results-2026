@@ -1,16 +1,20 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Simple path redirect — serve from /api/analytics
     if (req.method === 'GET') {
         return res.json({ visitors: global._visitorCount || 0, lastVisits: global._lastVisits || [] });
     }
 
     if (req.method === 'POST') {
         try {
-            const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+            let body = req.body;
+            // Vercel may auto-parse or leave as string
+            if (typeof body === 'string') body = JSON.parse(body);
+            if (!body) body = {};
+
             if (!global._visitorCount) global._visitorCount = 0;
             if (!global._lastVisits) global._lastVisits = [];
 
@@ -20,7 +24,7 @@ export default function handler(req, res) {
                 time: new Date().toISOString(),
                 page: body.page || 'unknown',
                 referrer: body.referrer || 'direct',
-                userAgent: req.headers['user-agent'] ? req.headers['user-agent'].substring(0, 100) : 'unknown'
+                ua: (req.headers['user-agent'] || '').substring(0, 100)
             };
 
             global._lastVisits.unshift(visit);
