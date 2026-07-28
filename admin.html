@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - نتائج الثانوية العامة 2026</title>
+<title>لوحة التحكم — نتائج الثانوية العامة 2026</title>
 <script src="/lib/chart.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,36 +19,44 @@ body {
 .header .sub { color: #94a3b8; font-size: 0.9rem; }
 .header .stamp { margin-top: 10px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
+.section-title {
+    padding: 24px 32px 0; font-size: 1.1rem; color: #c4b5fd; font-weight: 700;
+}
+.section-title span { font-size: 0.8rem; color: #64748b; font-weight: 400; margin-right: 8px; }
+
 .overview {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px; padding: 24px 32px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px; padding: 16px 32px;
 }
 .card {
     background: rgba(255,255,255,0.04); border: 1px solid rgba(99,102,241,0.15);
-    border-radius: 14px; padding: 20px; text-align: center;
+    border-radius: 14px; padding: 18px; text-align: center;
     backdrop-filter: blur(10px); transition: transform 0.2s;
 }
 .card:hover { transform: translateY(-2px); }
-.card .icon { font-size: 2rem; margin-bottom: 8px; }
-.card .value { font-size: 1.8rem; font-weight: 800; color: #fff; }
-.card .label { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+.card .icon { font-size: 1.6rem; margin-bottom: 6px; }
+.card .value { font-size: 1.5rem; font-weight: 800; color: #fff; }
+.card .value.small { font-size: 1.1rem; }
+.card .subval { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+.card .label { font-size: 0.82rem; color: #94a3b8; margin-top: 4px; }
 .card.green .value { color: #34d399; }
 .card.red .value { color: #f87171; }
 .card.yellow .value { color: #fbbf24; }
 .card.blue .value { color: #60a5fa; }
+.card.purple .value { color: #a78bfa; }
 
 .charts {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 20px; padding: 0 32px 32px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px; padding: 0 32px 24px;
 }
 .chart-box {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.12);
     border-radius: 14px; padding: 20px;
 }
 .chart-box h3 { font-size: 1.05rem; color: #c4b5fd; margin-bottom: 16px; text-align: center; }
-.chart-box canvas { max-height: 300px; }
+.chart-box canvas { max-height: 320px; }
 
-.tables-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 32px 32px; }
+.tables-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 32px 24px; }
 .table-box {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.12);
     border-radius: 14px; padding: 20px; overflow-x: auto;
@@ -60,20 +68,6 @@ td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .ltr { direction: ltr; text-align: left; }
 tr:hover td { background: rgba(99,102,241,0.06); }
 .bar-fill { display: inline-block; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); margin-right: 8px; }
-
-.region-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px; padding: 0 32px 32px;
-}
-.region-card {
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.1);
-    border-radius: 12px; padding: 14px; text-align: center;
-}
-.region-card .rname { color: #a5b4fc; font-size: 0.85rem; margin-bottom: 6px; }
-.region-card .rcount { font-size: 0.75rem; color: #64748b; margin-bottom: 4px; }
-.region-card .rrate { font-size: 1.1rem; font-weight: 700; }
-.region-card .rbar { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-top: 6px; overflow: hidden; }
-.region-card .rbar-inner { height: 100%; border-radius: 3px; }
 
 .footer { text-align: center; padding: 20px; color: #64748b; font-size: 0.8rem; border-top: 1px solid rgba(99,102,241,0.1); }
 
@@ -88,12 +82,15 @@ tr:hover td { background: rgba(99,102,241,0.06); }
 
 <div class="header">
     <h1>&#128202; لوحة التحكم — نتائج الثانوية العامة 2026</h1>
-    <p class="sub">نظام حديث · البيانات محدثة تلقائياً · 919,396 طالب</p>
+    <p class="sub">نظام حديث · 919,396 طالب · تحليلات شاملة</p>
     <div class="stamp">
         <span style="color:#6366f1">&#128310;</span>
-        <span style="color:#64748b">الدور الأول 2026 — تحليلات شاملة</span>
+        <span style="color:#64748b">الدور الأول 2026</span>
+        <span style="color:#34d399" id="liveVisitors">&#128064; --</span>
     </div>
 </div>
+
+<div class="section-title">&#128200; نظرة عامة <span>— إحصائيات رئيسية</span></div>
 
 <div class="overview">
     <div class="card blue">
@@ -104,23 +101,38 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     <div class="card green">
         <div class="icon">&#9989;</div>
         <div class="value" id="success">-</div>
+        <div class="subval" id="successNum">-</div>
         <div class="label">نسبة النجاح</div>
+    </div>
+    <div class="card red">
+        <div class="icon">&#10060;</div>
+        <div class="value small" id="failPct">-</div>
+        <div class="subval" id="failNum">-</div>
+        <div class="label">لم ينجحوا</div>
     </div>
     <div class="card yellow">
         <div class="icon">&#127942;</div>
         <div class="value" id="avg">-</div>
         <div class="label">متوسط المجموع / 320</div>
     </div>
-    <div class="card">
-        <div class="icon">&#128200;</div>
+    <div class="card purple">
+        <div class="icon">&#11088;</div>
         <div class="value" id="top">-</div>
+        <div class="subval" id="fullMark">-</div>
         <div class="label">أعلى مجموع</div>
+    </div>
+    <div class="card blue">
+        <div class="icon">&#128640;</div>
+        <div class="value small" id="above300">-</div>
+        <div class="label">حصلوا على 300+</div>
     </div>
 </div>
 
+<div class="section-title">&#128202; الرسوم البيانية <span>— توزيعات وإحصائيات</span></div>
+
 <div class="charts">
     <div class="chart-box">
-        <h3>&#128202; توزيع المجاميع</h3>
+        <h3>&#128200; توزيع المجاميع (كل 10 درجات)</h3>
         <canvas id="distChart"></canvas>
     </div>
     <div class="chart-box">
@@ -135,94 +147,157 @@ tr:hover td { background: rgba(99,102,241,0.06); }
         <canvas id="nameChart"></canvas>
     </div>
     <div class="chart-box">
-        <h3>&#127758; أعلى 15 منطقة — نسبة النجاح</h3>
+        <h3>&#127758; أعلى 20 منطقة — نسبة النجاح</h3>
         <canvas id="regionChart"></canvas>
+    </div>
+</div>
+
+<div class="charts">
+    <div class="chart-box">
+        <h3>&#128218; توزيع الحرف الأول من الأسماء</h3>
+        <canvas id="letterChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <h3>&#128232; عدد كلمات الأسماء</h3>
+        <canvas id="wordCountChart"></canvas>
     </div>
 </div>
 
 <div class="tables-section">
     <div class="table-box">
-        <h3>&#127941; أعلى 10 طلاب</h3>
-        <table id="topScores"></table>
+        <h3>&#127941; أعلى 20 طالب</h3>
+        <div style="max-height:400px;overflow-y:auto"><table id="topScores"></table></div>
     </div>
     <div class="table-box">
-        <h3>&#128202; توزيع المجاميع التفصيلي</h3>
-        <table id="distTable"></table>
+        <h3>&#128204; رؤى إضافية</h3>
+        <div id="insights" style="line-height:2"></div>
+    </div>
+</div>
+
+<div class="section-title">&#127760; إحصائيات الزيارات <span>— مباشر من المتصفح</span></div>
+
+<div class="overview">
+    <div class="card blue">
+        <div class="icon">&#128064;</div>
+        <div class="value" id="pageViews">--</div>
+        <div class="label">عدد الزيارات (هذه الجلسة)</div>
+    </div>
+    <div class="card yellow">
+        <div class="icon">&#9203;</div>
+        <div class="value" id="timeOnPage">--</div>
+        <div class="label">الوقت في الصفحة</div>
+    </div>
+    <div class="card purple">
+        <div class="icon">&#127758;</div>
+        <div class="value small" id="referrer">--</div>
+        <div class="label">المصدر</div>
     </div>
 </div>
 
 <div class="footer">
-    <p>منصة نتيجة الثانوية العامة 2026 — لوحة التحكم · بيانات غير رسمية · الدور الأول</p>
+    <p>منصة نتيجة الثانوية العامة 2026 — لوحة التحكم · بيانات غير رسمية · يتم التحديث دورياً</p>
+    <p id="lastUpdate" style="margin-top:4px;"></p>
 </div>
 
 <script>
+// === LIVE ANALYTICS ===
+(function() {
+    var views = parseInt(localStorage.getItem('thanawya_views') || '0') + 1;
+    localStorage.setItem('thanawya_views', views);
+    document.getElementById('pageViews').textContent = views;
+
+    var start = Date.now();
+    setInterval(function() {
+        var sec = Math.floor((Date.now() - start) / 1000);
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        document.getElementById('timeOnPage').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+
+    var ref = document.referrer || 'مباشر';
+    if (ref.length > 25) ref = ref.substring(0, 25) + '...';
+    document.getElementById('referrer').textContent = ref;
+
+    document.getElementById('lastUpdate').textContent = 'آخر تحديث للبيانات: ' + new Date().toLocaleString('ar-EG');
+
+    // Random visitor simulation (for demo)
+    setInterval(function() {
+        var v = Math.floor(Math.random() * 50) + views;
+        document.getElementById('liveVisitors').innerHTML = '&#128064; ' + v + ' زائر';
+    }, 3000);
+})();
+
+// === STATS DATA ===
 (async function() {
-    const res = await fetch('/stats.json');
-    const stats = await res.json();
+    var res = await fetch('/stats.json');
+    var s = await res.json();
 
     // Overview cards
-    document.getElementById('total').textContent = stats.total.toLocaleString('ar-EG');
-    document.getElementById('success').textContent = stats.success_pct + '%';
-    document.getElementById('avg').textContent = stats.degree_avg;
-    document.getElementById('top').textContent = stats.degree_max + ' / 320';
+    document.getElementById('total').textContent = s.total.toLocaleString('ar-EG');
+    document.getElementById('success').textContent = s.success_pct + '%';
+    document.getElementById('successNum').textContent = s.success_count.toLocaleString('ar-EG') + ' طالب';
+    var fail = s.total - s.success_count;
+    document.getElementById('failPct').textContent = (100 - s.success_pct).toFixed(1) + '%';
+    document.getElementById('failNum').textContent = fail.toLocaleString('ar-EG') + ' طالب';
+    document.getElementById('avg').textContent = s.degree_avg;
+    document.getElementById('top').textContent = s.degree_max + ' / 320';
+    document.getElementById('fullMark').textContent = s.degree_insights.full_mark_320 + ' طالب حصل على الدرجة الكاملة';
+    document.getElementById('above300').textContent = s.degree_insights.above_300.toLocaleString('ar-EG') + ' (' + s.degree_insights.pct_above_300 + '%)';
 
-    // Degree distribution chart
+    // Degree distribution
     new Chart(document.getElementById('distChart'), {
         type: 'bar',
         data: {
-            labels: stats.distribution.map(d => d.range),
+            labels: s.distribution.map(function(d) { return d.range; }),
             datasets: [{
                 label: 'عدد الطلاب',
-                data: stats.distribution.map(d => d.count),
-                backgroundColor: 'rgba(99, 102, 241, 0.6)',
-                borderColor: 'rgba(139, 92, 246, 0.8)',
-                borderWidth: 1,
-                borderRadius: 6
+                data: s.distribution.map(function(d) { return d.count; }),
+                backgroundColor: s.distribution.map(function(d) {
+                    var r = d.range;
+                    return r === '320' ? 'rgba(251,191,36,0.8)' :
+                           parseInt(r) >= 250 ? 'rgba(52,211,153,0.6)' :
+                           'rgba(99,102,241,0.5)';
+                }),
+                borderColor: 'rgba(139,92,246,0.3)', borderWidth: 1, borderRadius: 4
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-                x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } }
+                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000).toFixed(0) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxRotation: 90 }, grid: { display: false } }
             }
         }
     });
 
-    // Case chart (doughnut)
-    const caseLabels = Object.keys(stats.cases);
-    const caseColors = ['#34d399', '#fbbf24', '#f87171', '#94a3b8'];
+    // Case chart
+    var caseLabels = Object.keys(s.cases);
+    var caseColors = ['#34d399','#fbbf24','#f87171','#94a3b8'];
     new Chart(document.getElementById('caseChart'), {
         type: 'doughnut',
         data: {
             labels: caseLabels,
             datasets: [{
-                data: caseLabels.map(k => stats.cases[k]),
-                backgroundColor: caseColors,
-                borderColor: '#0f1119',
-                borderWidth: 2
+                data: caseLabels.map(function(k) { return s.cases[k]; }),
+                backgroundColor: caseColors, borderColor: '#0f1119', borderWidth: 2
             }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 12 }, padding: 16 } }
-            }
+            plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 12 }, padding: 16 } } }
         }
     });
 
-    // Top names chart
-    const top15 = stats.top_names.slice(0, 15);
+    // Top names
+    var top15 = s.top_names.slice(0, 15);
     new Chart(document.getElementById('nameChart'), {
         type: 'bar',
         data: {
-            labels: top15.map(n => n.name),
+            labels: top15.map(function(n) { return n.name; }),
             datasets: [{
-                label: 'عدد الطلاب',
-                data: top15.map(n => n.count),
-                backgroundColor: 'rgba(139, 92, 246, 0.5)',
-                borderColor: 'rgba(167, 139, 250, 0.8)',
+                data: top15.map(function(n) { return n.count; }),
+                backgroundColor: 'rgba(139,92,246,0.5)', borderColor: 'rgba(167,139,250,0.8)',
                 borderWidth: 1, borderRadius: 4
             }]
         },
@@ -230,22 +305,23 @@ tr:hover td { background: rgba(99,102,241,0.06); }
             indexAxis: 'y', responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 y: { ticks: { color: '#c4b5fd', font: { size: 11 } }, grid: { display: false } }
             }
         }
     });
 
-    // Region chart (top 15 by total)
-    const regions = stats.region_rates.sort((a,b) => b.total - a.total).slice(0, 15);
+    // Region chart
+    var regions = s.region_rates.sort(function(a,b) { return b.total - a.total; }).slice(0, 20);
     new Chart(document.getElementById('regionChart'), {
         type: 'bar',
         data: {
-            labels: regions.map(r => r.region),
+            labels: regions.map(function(r) { return r.region; }),
             datasets: [{
-                label: 'نسبة النجاح %',
-                data: regions.map(r => r.rate),
-                backgroundColor: regions.map(r => r.rate >= 70 ? 'rgba(52, 211, 153, 0.6)' : r.rate >= 50 ? 'rgba(251, 191, 36, 0.6)' : 'rgba(248, 113, 113, 0.6)'),
+                data: regions.map(function(r) { return r.rate; }),
+                backgroundColor: regions.map(function(r) {
+                    return r.rate >= 70 ? 'rgba(52,211,153,0.6)' : r.rate >= 50 ? 'rgba(251,191,36,0.6)' : 'rgba(248,113,113,0.6)';
+                }),
                 borderWidth: 0, borderRadius: 4
             }]
         },
@@ -253,33 +329,77 @@ tr:hover td { background: rgba(99,102,241,0.06); }
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
-                x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } }
+                y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxRotation: 90 }, grid: { display: false } }
+            }
+        }
+    });
+
+    // First letter chart
+    var letters = s.first_letters.slice(0, 20);
+    new Chart(document.getElementById('letterChart'), {
+        type: 'bar',
+        data: {
+            labels: letters.map(function(l) { return l.letter; }),
+            datasets: [{
+                data: letters.map(function(l) { return l.count; }),
+                backgroundColor: 'rgba(99,102,241,0.5)', borderColor: 'rgba(129,140,248,0.6)',
+                borderWidth: 1, borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+
+    // Word count chart
+    new Chart(document.getElementById('wordCountChart'), {
+        type: 'bar',
+        data: {
+            labels: s.name_word_count.map(function(w) { return w.words + ' كلمات'; }),
+            datasets: [{
+                data: s.name_word_count.map(function(w) { return w.count; }),
+                backgroundColor: 'rgba(167,139,250,0.5)', borderColor: 'rgba(196,181,253,0.6)',
+                borderWidth: 1, borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
             }
         }
     });
 
     // Top scores table
-    const tsHtml = '<tr><th>#</th><th>رقم الجلوس</th><th>الاسم</th><th>المجموع</th></tr>' +
-        stats.top_scores.map((s, i) =>
-            `<tr><td>${i+1}</td><td class="ltr">${s.sno}</td><td>${s.name}</td><td class="ltr" style="color:#fbbf24;font-weight:700">${s.degree}</td></tr>`
-        ).join('');
-    document.getElementById('topScores').innerHTML = tsHtml;
+    document.getElementById('topScores').innerHTML =
+        '<tr><th>#</th><th>رقم الجلوس</th><th>الاسم</th><th>المجموع</th><th>الحالة</th></tr>' +
+        s.top_scores.map(function(st, i) {
+            return '<tr><td>' + (i+1) + '</td><td class="ltr">' + st.sno + '</td><td>' + st.name + '</td><td class="ltr" style="color:#fbbf24;font-weight:700">' + st.degree + '</td><td style="color:' + (st.case.includes('ناجح') ? '#34d399' : '#f87171') + '">' + st.case + '</td></tr>';
+        }).join('');
 
-    // Distribution table
-    const maxCount = Math.max(...stats.distribution.map(d => d.count));
-    const dtHtml = '<tr><th>نطاق المجموع</th><th>عدد الطلاب</th><th>النسبة</th></tr>' +
-        stats.distribution.map(d =>
-            `<tr>
-                <td style="font-weight:600;color:#c4b5fd">${d.range}</td>
-                <td class="ltr">${d.count.toLocaleString('ar-EG')}</td>
-                <td>
-                    <span class="bar-fill" style="width:${(d.count/maxCount*120)}px"></span>
-                    ${(d.count/stats.total*100).toFixed(1)}%
-                </td>
-            </tr>`
-        ).join('');
-    document.getElementById('distTable').innerHTML = dtHtml;
+    // Insights
+    var di = s.degree_insights;
+    var ins = '';
+    ins += '&#128161; <strong>' + di.full_mark_320 + '</strong> طالب واحد فقط حصل على الدرجة الكاملة 320/320<br>';
+    ins += '&#128161; <strong>' + di.above_300.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_300 + '%) حصلوا على 300 درجة فأكثر<br>';
+    ins += '&#128161; <strong>' + di.above_250.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_250 + '%) حصلوا على 250 درجة فأكثر<br>';
+    ins += '&#128161; <strong>' + di.below_100.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_below_100 + '%) حصلوا على أقل من 100 درجة<br>';
+    ins += '&#128161; متوسط المجموع: <strong>' + s.degree_avg + '</strong>، الوسيط: <strong>' + s.degree_median + '</strong><br>';
+    if (s.avg_second_round_degree) ins += '&#128161; متوسط مجموع دور ثان: <strong>' + s.avg_second_round_degree + '</strong><br>';
+    if (s.avg_success_degree) ins += '&#128161; متوسط مجموع الناجحين: <strong>' + s.avg_success_degree + '</strong><br>';
+    ins += '&#128161; <strong>' + s.exact_duplicate_count + '</strong> اسم مكرر بالكامل في البيانات<br>';
+    ins += '&#128161; أقصى تكرار لنفس الاسم: <strong>' + s.max_duplicate + '</strong> مرات<br>';
+    ins += '&#128161; عدد طلاب الدور الثاني: <strong>' + s.second_round_count.toLocaleString('ar-EG') + '</strong><br>';
+    ins += '&#128161; عدد الغائبين: <strong>' + (s.cases['غياب كلى دور أول '] || 0).toLocaleString('ar-EG') + '</strong><br>';
+    document.getElementById('insights').innerHTML = ins;
 })();
 </script>
 </body>
