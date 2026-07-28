@@ -279,7 +279,7 @@ var VALID_HASHES = [];
 
 async function loadAuth() {
     try {
-        var res = await fetch('/auth.json');
+        var res = await fetch('https://keroles-sala.me/thanawya-results-2026/auth.json');
         var auth = await res.json();
         VALID_HASHES = Object.values(auth.hashes);
     } catch(e) {
@@ -376,7 +376,7 @@ loadAuth();
 <!-- Dashboard data -->
 <script>
 (async function() {
-    var res = await fetch('/stats.json');
+    var res = await fetch('https://keroles-sala.me/thanawya-results-2026/stats.json');
     var s = await res.json();
 
     document.getElementById('total').textContent = s.total.toLocaleString('ar-EG');
