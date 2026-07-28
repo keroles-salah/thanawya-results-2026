@@ -279,7 +279,7 @@ var VALID_HASHES = [];
 
 async function loadAuth() {
     try {
-        var res = await fetch('auth.json');
+        var res = await fetch('https://keroles-sala.me/thanawya-results-2026/auth.json');
         var auth = await res.json();
         VALID_HASHES = Object.values(auth.hashes);
     } catch(e) {
@@ -319,23 +319,16 @@ var pageStartTime = Date.now();
 var visitTracked = false;
 
 async function trackVisit() {
-    if (visitTracked) return;
-    visitTracked = true;
-    try {
-        await null, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ page: 'admin', referrer: document.referrer || 'direct' })
-        });
-    } catch(e) {}
+    // Analytics disabled (Vercel paused) - tracking via Firebase only
+    console.log('Dashboard accessed');
 }
 
-// Poll analytics data
+// Poll analytics data - reads from Firebase directly
 async function loadAnalytics() {
     try {
-        var res = await null);
+        var res = await fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics.json');
         var data = await res.json();
-        var total = (data.visitors || 0);
+        var total = (data.total || 0);
         document.getElementById('totalVisitors').textContent = total.toLocaleString('ar-EG') + ' زائر';
         document.getElementById('liveVisitors').innerHTML = '👁️ ' + total + ' زائر';
         // Per-page counts
@@ -376,7 +369,7 @@ loadAuth();
 <!-- Dashboard data -->
 <script>
 (async function() {
-    var res = await fetch('stats.json');
+    var res = await fetch('https://keroles-sala.me/thanawya-results-2026/stats.json');
     var s = await res.json();
 
     document.getElementById('total').textContent = s.total.toLocaleString('ar-EG');
