@@ -16,13 +16,32 @@ body {
     align-items: center;
     padding: 20px;
 }
-.container { width: 100%; max-width: 520px; }
-.header { text-align: center; margin-bottom: 30px; }
+.container { width: 100%; max-width: 560px; }
+.header { text-align: center; margin-bottom: 24px; }
 .header h1 {
     font-size: 2rem; color: #fff; margin-bottom: 6px;
     text-shadow: 0 0 20px rgba(99,102,241,0.4);
 }
 .subtitle { color: #94a3b8; font-size: 0.95rem; }
+
+.tabs { display: flex; gap: 0; margin-bottom: 16px; }
+.tab {
+    flex: 1; text-align: center; padding: 12px;
+    border: 1px solid rgba(99,102,241,0.2);
+    cursor: pointer; color: #94a3b8; font-size: 0.95rem;
+    transition: all 0.3s; background: rgba(255,255,255,0.03);
+}
+.tab:first-child { border-radius: 0 12px 12px 0; }
+.tab:last-child { border-radius: 12px 0 0 12px; }
+.tab.active {
+    background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.2));
+    color: #fff; border-color: rgba(99,102,241,0.4); font-weight: 600;
+}
+.tab:hover:not(.active) { background: rgba(255,255,255,0.06); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
 .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
 .search-box input {
     flex: 1; padding: 14px 18px;
@@ -31,17 +50,19 @@ body {
     color: #fff; outline: none; direction: ltr; text-align: center;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
+.search-box input.arabic { direction: rtl; text-align: right; }
 .search-box input:focus {
     border-color: #6366f1;
     box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
 }
-.search-box input::placeholder { color: #64748b; }
+.search-box input::placeholder { color: #64748b; font-size: 0.95rem; }
 .search-box button {
     padding: 14px 28px;
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
     border: none; border-radius: 12px;
     color: #fff; font-size: 1.05rem; font-weight: 600;
     cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
 }
 .search-box button:hover {
     transform: translateY(-1px);
@@ -52,27 +73,31 @@ body {
 .error {
     background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
     border-radius: 12px; padding: 16px 20px; color: #fca5a5;
-    font-size: 1rem; text-align: center;
+    font-size: 1rem; text-align: center; margin-bottom: 12px;
 }
 .result-card {
     background: rgba(255,255,255,0.06); border: 1px solid rgba(99,102,241,0.25);
-    border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px);
+    border-radius: 16px; overflow: hidden; backdrop-filter: blur(10px); margin-bottom: 10px;
 }
 .result-header {
     background: linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.2));
-    padding: 16px 20px; font-size: 1.2rem; font-weight: 700; color: #fff; text-align: center;
+    padding: 14px 18px; font-size: 1.1rem; font-weight: 700; color: #fff; text-align: center;
 }
 .field {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .field:last-child { border-bottom: none; }
-.label { color: #94a3b8; font-size: 0.9rem; font-weight: 500; }
-.value { color: #e2e8f0; font-size: 0.95rem; font-weight: 600; }
+.label { color: #94a3b8; font-size: 0.85rem; font-weight: 500; }
+.value { color: #e2e8f0; font-size: 0.9rem; font-weight: 600; }
 .value.ltr { direction: ltr; text-align: left; }
-.value.name { color: #fff; font-size: 1rem; }
-.value.degree { color: #fbbf24; font-size: 1.1rem; }
+.value.name { color: #fff; font-size: 0.95rem; }
+.value.degree { color: #fbbf24; font-size: 1.05rem; }
 .value.case { color: #34d399; }
+.name-results-count {
+    text-align: center; color: #6366f1; font-size: 0.85rem; padding: 8px; margin-bottom: 8px;
+}
+.name-results-count strong { color: #a5b4fc; }
 .footer { text-align: center; margin-top: 40px; color: #64748b; font-size: 0.85rem; line-height: 1.8; }
 .footer .count { color: #6366f1; font-weight: 600; }
 .hidden { display: none; }
@@ -87,87 +112,231 @@ body {
 <div class="container">
     <div class="header">
         <h1>&#127891; نتيجة الثانوية العامة 2026</h1>
-        <p class="subtitle">نظام حديث — البحث برقم الجلوس</p>
+        <p class="subtitle">نظام حديث &mdash; البحث برقم الجلوس أو الاسم</p>
     </div>
-    <div class="search-box">
-        <input type="text" id="seatingNo" placeholder="&#128269; اكتب رقم الجلوس..." inputmode="numeric" autocomplete="off" autofocus>
-        <button id="searchBtn" onclick="search()">بحث</button>
+
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('seating')">&#128290; رقم الجلوس</div>
+        <div class="tab" onclick="switchTab('name')">&#128100; الاسم</div>
     </div>
-    <div id="loader" class="loader hidden">&#9203; جاري البحث...</div>
-    <div id="error" class="error hidden"></div>
-    <div id="result" class="result-card hidden"></div>
+
+    <!-- Seating Number Tab -->
+    <div id="tab-seating" class="tab-content active">
+        <div class="search-box">
+            <input type="text" id="seatingNo" placeholder="&#128269; اكتب رقم الجلوس..." inputmode="numeric" autocomplete="off" autofocus>
+            <button id="searchBtn" onclick="searchBySeating()">بحث</button>
+        </div>
+        <div id="seating-loader" class="loader hidden">&#9203; جاري البحث...</div>
+        <div id="seating-error" class="error hidden"></div>
+        <div id="seating-result"></div>
+    </div>
+
+    <!-- Name Search Tab -->
+    <div id="tab-name" class="tab-content">
+        <div class="search-box">
+            <input type="text" id="nameInput" class="arabic" placeholder="&#128269; اكتب الاسم للبحث..." autocomplete="off">
+            <button id="nameBtn" onclick="searchByName()">بحث</button>
+        </div>
+        <div id="name-loader" class="loader hidden">&#9203; جاري البحث في 919,396 طالب...</div>
+        <div id="name-error" class="error hidden"></div>
+        <div id="name-results-count" class="name-results-count hidden"></div>
+        <div id="name-result"></div>
+    </div>
+
     <div class="footer">
         <p>بيانات الدور الأول 2026 &mdash; نتائج غير رسمية</p>
         <p class="count">عدد الطلاب: <strong dir="ltr">919,396</strong> طالب</p>
-        <p style="margin-top:8px;">للاستعلام أدخل رقم الجلوس المكون من 7 أرقام</p>
     </div>
 </div>
 <script>
-const input = document.getElementById('seatingNo');
-const btn = document.getElementById('searchBtn');
-const loader = document.getElementById('loader');
-const error = document.getElementById('error');
-const result = document.getElementById('result');
+// ===== Tab switching =====
+let currentTab = 'seating';
 
-input.addEventListener('keydown', function(e) { if (e.key === 'Enter') search(); });
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', false));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', false));
+    document.getElementById('tab-' + tab).classList.add('active');
+    if (tab === 'seating') {
+        document.querySelector('.tab:first-child').classList.add('active');
+        document.getElementById('seatingNo').focus();
+    } else {
+        document.querySelector('.tab:last-child').classList.add('active');
+        document.getElementById('nameInput').focus();
+    }
+}
 
-async function search() {
-    const sno = input.value.trim();
+// ===== Seating number search =====
+document.getElementById('seatingNo').addEventListener('keydown', function(e) { if (e.key === 'Enter') searchBySeating(); });
+
+async function searchBySeating() {
+    const sno = document.getElementById('seatingNo').value.trim();
     if (!sno) return;
     if (!/^\d{7}$/.test(sno)) {
-        error.textContent = '\u26A0\uFE0F \u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 \u064A\u062C\u0628 \u0623\u0646 \u064A\u0643\u0648\u0646 \u0667 \u0623\u0631\u0642\u0627\u0645';
-        error.classList.remove('hidden');
+        showSeatingError('\u26A0\uFE0F \u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 \u064A\u062C\u0628 \u0623\u0646 \u064A\u0643\u0648\u0646 \u0667 \u0623\u0631\u0642\u0627\u0645');
         return;
     }
 
-    loader.classList.remove('hidden');
-    error.classList.add('hidden');
-    result.classList.add('hidden');
-    btn.disabled = true;
+    setSeatingLoading(true);
+    clearSeating();
 
     try {
         const prefix = sno.substring(0, 4);
         const url = 'data/' + prefix + '.json';
-
         const res = await fetch(url);
         if (!res.ok) {
-            if (res.status === 404) {
-                error.textContent = '\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u064A\u062C\u0629 \u0644\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 ' + sno;
-            } else {
-                error.textContent = '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0627\u062A\u0635\u0627\u0644. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.';
-            }
-            error.classList.remove('hidden');
+            showSeatingError('\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u064A\u062C\u0629 \u0644\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 ' + sno);
             return;
         }
-
         const bucket = await res.json();
         const student = bucket[sno];
-
         if (!student) {
-            error.textContent = '\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u064A\u062C\u0629 \u0644\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 ' + sno;
-            error.classList.remove('hidden');
+            showSeatingError('\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u064A\u062C\u0629 \u0644\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633 ' + sno);
+            return;
+        }
+        renderStudentCard('seating-result', sno, student);
+    } catch(e) {
+        showSeatingError('\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0627\u062A\u0635\u0627\u0644. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.');
+    } finally {
+        setSeatingLoading(false);
+    }
+}
+
+function showSeatingError(msg) { var e = document.getElementById('seating-error'); e.textContent = msg; e.classList.remove('hidden'); }
+function clearSeating() { document.getElementById('seating-error').classList.add('hidden'); document.getElementById('seating-result').innerHTML = ''; }
+function setSeatingLoading(v) {
+    document.getElementById('seating-loader').classList.toggle('hidden', !v);
+    document.getElementById('searchBtn').disabled = v;
+}
+
+// ===== Name search =====
+document.getElementById('nameInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') searchByName(); });
+
+let nameIndexData = null;
+let loadedBuckets = {}; // cache
+
+async function loadNameIndex() {
+    if (nameIndexData) return nameIndexData;
+    const res = await fetch('name-search/char_index.json');
+    nameIndexData = await res.json();
+    return nameIndexData;
+}
+
+async function searchByName() {
+    const query = document.getElementById('nameInput').value.trim();
+    if (!query) return;
+    if (query.length < 3) {
+        showNameError('\u26A0\uFE0F \u0627\u0643\u062A\u0628 \u0663 \u0623\u062D\u0631\u0641 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644 \u0644\u0644\u0628\u062D\u062B \u0628\u0627\u0644\u0627\u0633\u0645');
+        return;
+    }
+
+    setNameLoading(true);
+    clearName();
+
+    try {
+        const idx = await loadNameIndex();
+        const firstChar = query[0];
+
+        // Find which bucket files to load based on first char
+        const files = idx.char_groups[firstChar];
+        if (!files) {
+            showNameError('\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C \u0644\u0647\u0630\u0627 \u0627\u0644\u0627\u0633\u0645');
             return;
         }
 
-        const isSuccess = student.c.includes('\u0646\u0627\u062C\u062D');
-        const emoji = isSuccess ? '\u2705' : '\u26A0\uFE0F';
-        const caseClass = isSuccess ? 'case' : '';
+        const lowerQuery = query.toLowerCase();
+        const matches = [];
 
-        result.innerHTML =
-            '<div class="result-header">' + emoji + ' \u0646\u062A\u064A\u062C\u0629 \u0627\u0644\u0637\u0627\u0644\u0628</div>' +
-            '<div class="field"><span class="label">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633</span><span class="value ltr">' + sno + '</span></div>' +
-            '<div class="field"><span class="label">\u0627\u0644\u0627\u0633\u0645</span><span class="value name">' + student.n + '</span></div>' +
-            '<div class="field"><span class="label">\u0627\u0644\u0645\u062C\u0645\u0648\u0639</span><span class="value degree ltr">' + student.d + ' / 320</span></div>' +
-            '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + student.c + '</span></div>';
-        result.classList.remove('hidden');
+        // Load only files for the matching first character
+        for (const fname of files) {
+            // Use cache if available
+            if (!loadedBuckets[fname]) {
+                const res = await fetch('name-search/' + fname);
+                const data = await res.json();
+                loadedBuckets[fname] = data;
+            }
+            const bucket = loadedBuckets[fname];
+            // Linear search through this bucket (already sorted by name, which helps with early exit)
+            for (const [sno, name] of bucket) {
+                if (name.toLowerCase().startsWith(lowerQuery)) {
+                    matches.push({ sno, name });
+                    if (matches.length >= 200) break; // limit results
+                } else if (matches.length > 0 && name.toLowerCase().localeCompare(lowerQuery) > 0) {
+                    // Since sorted, once we pass all matches we can stop checking
+                    continue;
+                }
+            }
+            if (matches.length >= 200) break;
+        }
+
+        if (matches.length === 0) {
+            showNameError('\uD83D\uDEAB \u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C \u0644\u0640 "' + query + '"');
+            return;
+        }
+
+        // Show count
+        const countEl = document.getElementById('name-results-count');
+        countEl.innerHTML = '\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 <strong>' + matches.length + '</strong> \u0637\u0627\u0644\u0628' + (matches.length > 1 ? '\u0650' : '');
+        countEl.classList.remove('hidden');
+
+        // Now lookup full data for each match
+        const resultDiv = document.getElementById('name-result');
+        for (const match of matches) {
+            // Use seating number lookup for full details
+            const prefix = match.sno.substring(0, 4);
+            try {
+                const dres = await fetch('data/' + prefix + '.json');
+                if (dres.ok) {
+                    const dbucket = await dres.json();
+                    const student = dbucket[match.sno];
+                    if (student) {
+                        renderStudentCardElement(resultDiv, match.sno, student);
+                        continue;
+                    }
+                }
+            } catch(e) {}
+            // Fallback: show just name + seating number
+            resultDiv.innerHTML += '<div class="result-card"><div class="result-header">\uD83D\uDD0D \u0646\u062A\u064A\u062C\u0629</div><div class="field"><span class="label">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633</span><span class="value ltr">' + match.sno + '</span></div><div class="field"><span class="label">\u0627\u0644\u0627\u0633\u0645</span><span class="value name">' + match.name + '</span></div></div>';
+        }
 
     } catch(e) {
-        error.textContent = '\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0627\u062A\u0635\u0627\u0644. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.';
-        error.classList.remove('hidden');
+        showNameError('\u062D\u062F\u062B \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0628\u062D\u062B. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649.');
     } finally {
-        loader.classList.add('hidden');
-        btn.disabled = false;
+        setNameLoading(false);
     }
+}
+
+function showNameError(msg) { var e = document.getElementById('name-error'); e.textContent = msg; e.classList.remove('hidden'); }
+function clearName() {
+    document.getElementById('name-error').classList.add('hidden');
+    document.getElementById('name-result').innerHTML = '';
+    document.getElementById('name-results-count').classList.add('hidden');
+}
+function setNameLoading(v) {
+    document.getElementById('name-loader').classList.toggle('hidden', !v);
+    document.getElementById('nameBtn').disabled = v;
+}
+
+// ===== Shared rendering =====
+function renderStudentCard(containerId, sno, student) {
+    const div = document.getElementById(containerId);
+    div.innerHTML = '';
+    renderStudentCardElement(div, sno, student);
+}
+
+function renderStudentCardElement(containerEl, sno, student) {
+    const isSuccess = student.c.includes('\u0646\u0627\u062C\u062D');
+    const emoji = isSuccess ? '\u2705' : '\u26A0\uFE0F';
+    const caseClass = isSuccess ? 'case' : '';
+
+    containerEl.innerHTML +=
+        '<div class="result-card">' +
+        '<div class="result-header">' + emoji + ' \u0646\u062A\u064A\u062C\u0629 \u0627\u0644\u0637\u0627\u0644\u0628</div>' +
+        '<div class="field"><span class="label">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633</span><span class="value ltr">' + sno + '</span></div>' +
+        '<div class="field"><span class="label">\u0627\u0644\u0627\u0633\u0645</span><span class="value name">' + student.n + '</span></div>' +
+        '<div class="field"><span class="label">\u0627\u0644\u0645\u062C\u0645\u0648\u0639</span><span class="value degree ltr">' + student.d + ' / 320</span></div>' +
+        '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + student.c + '</span></div>' +
+        '</div>';
 }
 </script>
 </body>
