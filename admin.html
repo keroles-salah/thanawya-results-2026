@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - نتائج الثانوية العامة 2026</title>
+<script src="/lib/chart.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f1119; color: #e0e0e0; min-height: 100vh;
+}
+.header {
+    background: linear-gradient(135deg, #1a1040 0%, #302b63 50%, #1a1040 100%);
+    padding: 24px 32px; text-align: center; border-bottom: 1px solid rgba(99,102,241,0.2);
+}
+.header h1 { font-size: 1.8rem; color: #fff; margin-bottom: 4px; }
+.header .sub { color: #94a3b8; font-size: 0.9rem; }
+.header .stamp { margin-top: 10px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+.overview {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; padding: 24px 32px;
+}
+.card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(99,102,241,0.15);
+    border-radius: 14px; padding: 20px; text-align: center;
+    backdrop-filter: blur(10px); transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-2px); }
+.card .icon { font-size: 2rem; margin-bottom: 8px; }
+.card .value { font-size: 1.8rem; font-weight: 800; color: #fff; }
+.card .label { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+.card.green .value { color: #34d399; }
+.card.red .value { color: #f87171; }
+.card.yellow .value { color: #fbbf24; }
+.card.blue .value { color: #60a5fa; }
+
+.charts {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px; padding: 0 32px 32px;
+}
+.chart-box {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 14px; padding: 20px;
+}
+.chart-box h3 { font-size: 1.05rem; color: #c4b5fd; margin-bottom: 16px; text-align: center; }
+.chart-box canvas { max-height: 300px; }
+
+.tables-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 32px 32px; }
+.table-box {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.12);
+    border-radius: 14px; padding: 20px; overflow-x: auto;
+}
+.table-box h3 { font-size: 1.05rem; color: #c4b5fd; margin-bottom: 12px; text-align: center; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { background: rgba(99,102,241,0.12); padding: 10px 12px; color: #94a3b8; font-weight: 600; }
+td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.ltr { direction: ltr; text-align: left; }
+tr:hover td { background: rgba(99,102,241,0.06); }
+.bar-fill { display: inline-block; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); margin-right: 8px; }
+
+.region-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px; padding: 0 32px 32px;
+}
+.region-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(99,102,241,0.1);
+    border-radius: 12px; padding: 14px; text-align: center;
+}
+.region-card .rname { color: #a5b4fc; font-size: 0.85rem; margin-bottom: 6px; }
+.region-card .rcount { font-size: 0.75rem; color: #64748b; margin-bottom: 4px; }
+.region-card .rrate { font-size: 1.1rem; font-weight: 700; }
+.region-card .rbar { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.region-card .rbar-inner { height: 100%; border-radius: 3px; }
+
+.footer { text-align: center; padding: 20px; color: #64748b; font-size: 0.8rem; border-top: 1px solid rgba(99,102,241,0.1); }
+
+@media (max-width: 768px) {
+    .tables-section, .charts { grid-template-columns: 1fr; }
+    .overview { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>&#128202; لوحة التحكم — نتائج الثانوية العامة 2026</h1>
+    <p class="sub">نظام حديث · البيانات محدثة تلقائياً · 919,396 طالب</p>
+    <div class="stamp">
+        <span style="color:#6366f1">&#128310;</span>
+        <span style="color:#64748b">الدور الأول 2026 — تحليلات شاملة</span>
+    </div>
+</div>
+
+<div class="overview">
+    <div class="card blue">
+        <div class="icon">&#128100;</div>
+        <div class="value" id="total"></div>
+        <div class="label">إجمالي الطلاب</div>
+    </div>
+    <div class="card green">
+        <div class="icon">&#9989;</div>
+        <div class="value" id="success">-</div>
+        <div class="label">نسبة النجاح</div>
+    </div>
+    <div class="card yellow">
+        <div class="icon">&#127942;</div>
+        <div class="value" id="avg">-</div>
+        <div class="label">متوسط المجموع / 320</div>
+    </div>
+    <div class="card">
+        <div class="icon">&#128200;</div>
+        <div class="value" id="top">-</div>
+        <div class="label">أعلى مجموع</div>
+    </div>
+</div>
+
+<div class="charts">
+    <div class="chart-box">
+        <h3>&#128202; توزيع المجاميع</h3>
+        <canvas id="distChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <h3>&#127979; نسب الحالات</h3>
+        <canvas id="caseChart"></canvas>
+    </div>
+</div>
+
+<div class="charts">
+    <div class="chart-box">
+        <h3>&#127775; أكثر 15 اسم أول انتشاراً</h3>
+        <canvas id="nameChart"></canvas>
+    </div>
+    <div class="chart-box">
+        <h3>&#127758; أعلى 15 منطقة — نسبة النجاح</h3>
+        <canvas id="regionChart"></canvas>
+    </div>
+</div>
+
+<div class="tables-section">
+    <div class="table-box">
+        <h3>&#127941; أعلى 10 طلاب</h3>
+        <table id="topScores"></table>
+    </div>
+    <div class="table-box">
+        <h3>&#128202; توزيع المجاميع التفصيلي</h3>
+        <table id="distTable"></table>
+    </div>
+</div>
+
+<div class="footer">
+    <p>منصة نتيجة الثانوية العامة 2026 — لوحة التحكم · بيانات غير رسمية · الدور الأول</p>
+</div>
+
+<script>
+(async function() {
+    const res = await fetch('/stats.json');
+    const stats = await res.json();
+
+    // Overview cards
+    document.getElementById('total').textContent = stats.total.toLocaleString('ar-EG');
+    document.getElementById('success').textContent = stats.success_pct + '%';
+    document.getElementById('avg').textContent = stats.degree_avg;
+    document.getElementById('top').textContent = stats.degree_max + ' / 320';
+
+    // Degree distribution chart
+    new Chart(document.getElementById('distChart'), {
+        type: 'bar',
+        data: {
+            labels: stats.distribution.map(d => d.range),
+            datasets: [{
+                label: 'عدد الطلاب',
+                data: stats.distribution.map(d => d.count),
+                backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                borderColor: 'rgba(139, 92, 246, 0.8)',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+
+    // Case chart (doughnut)
+    const caseLabels = Object.keys(stats.cases);
+    const caseColors = ['#34d399', '#fbbf24', '#f87171', '#94a3b8'];
+    new Chart(document.getElementById('caseChart'), {
+        type: 'doughnut',
+        data: {
+            labels: caseLabels,
+            datasets: [{
+                data: caseLabels.map(k => stats.cases[k]),
+                backgroundColor: caseColors,
+                borderColor: '#0f1119',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 12 }, padding: 16 } }
+            }
+        }
+    });
+
+    // Top names chart
+    const top15 = stats.top_names.slice(0, 15);
+    new Chart(document.getElementById('nameChart'), {
+        type: 'bar',
+        data: {
+            labels: top15.map(n => n.name),
+            datasets: [{
+                label: 'عدد الطلاب',
+                data: top15.map(n => n.count),
+                backgroundColor: 'rgba(139, 92, 246, 0.5)',
+                borderColor: 'rgba(167, 139, 250, 0.8)',
+                borderWidth: 1, borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#c4b5fd', font: { size: 11 } }, grid: { display: false } }
+            }
+        }
+    });
+
+    // Region chart (top 15 by total)
+    const regions = stats.region_rates.sort((a,b) => b.total - a.total).slice(0, 15);
+    new Chart(document.getElementById('regionChart'), {
+        type: 'bar',
+        data: {
+            labels: regions.map(r => r.region),
+            datasets: [{
+                label: 'نسبة النجاح %',
+                data: regions.map(r => r.rate),
+                backgroundColor: regions.map(r => r.rate >= 70 ? 'rgba(52, 211, 153, 0.6)' : r.rate >= 50 ? 'rgba(251, 191, 36, 0.6)' : 'rgba(248, 113, 113, 0.6)'),
+                borderWidth: 0, borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } }
+            }
+        }
+    });
+
+    // Top scores table
+    const tsHtml = '<tr><th>#</th><th>رقم الجلوس</th><th>الاسم</th><th>المجموع</th></tr>' +
+        stats.top_scores.map((s, i) =>
+            `<tr><td>${i+1}</td><td class="ltr">${s.sno}</td><td>${s.name}</td><td class="ltr" style="color:#fbbf24;font-weight:700">${s.degree}</td></tr>`
+        ).join('');
+    document.getElementById('topScores').innerHTML = tsHtml;
+
+    // Distribution table
+    const maxCount = Math.max(...stats.distribution.map(d => d.count));
+    const dtHtml = '<tr><th>نطاق المجموع</th><th>عدد الطلاب</th><th>النسبة</th></tr>' +
+        stats.distribution.map(d =>
+            `<tr>
+                <td style="font-weight:600;color:#c4b5fd">${d.range}</td>
+                <td class="ltr">${d.count.toLocaleString('ar-EG')}</td>
+                <td>
+                    <span class="bar-fill" style="width:${(d.count/maxCount*120)}px"></span>
+                    ${(d.count/stats.total*100).toFixed(1)}%
+                </td>
+            </tr>`
+        ).join('');
+    document.getElementById('distTable').innerHTML = dtHtml;
+})();
+</script>
+</body>
+</html>
