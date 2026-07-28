@@ -326,14 +326,16 @@ async function trackVisit() {
 // Poll analytics data - reads from Firebase directly
 async function loadAnalytics() {
     try {
-        var res = await fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics.json');
-        var data = await res.json();
-        var total = (data.total || 0);
+        var t = await fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/total.json');
+        var s = await fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/pages/search.json');
+        var a = await fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/pages/admin.json');
+        var total = await t.json() || 0;
+        var searchCount = await s.json() || 0;
+        var adminCount = await a.json() || 0;
         document.getElementById('totalVisitors').textContent = total.toLocaleString('ar-EG') + ' زائر';
         document.getElementById('liveVisitors').innerHTML = '👁️ ' + total + ' زائر';
-        // Per-page counts
-        document.getElementById('searchPageViews').textContent = ((data.pages && data.pages.search) || 0).toLocaleString('ar-EG');
-        document.getElementById('adminPageViews2').textContent = ((data.pages && data.pages.admin) || 0).toLocaleString('ar-EG');
+        document.getElementById('searchPageViews').textContent = searchCount.toLocaleString('ar-EG');
+        document.getElementById('adminPageViews2').textContent = adminCount.toLocaleString('ar-EG');
     } catch(e) {
         document.getElementById('totalVisitors').textContent = 'غير متصل';
         document.getElementById('searchPageViews').textContent = '--';
