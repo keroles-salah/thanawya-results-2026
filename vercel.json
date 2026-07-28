@@ -1,0 +1,14 @@
+{
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "functions": {
+    "api/*.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  },
+  "routes": [
+    { "src": "/api/.*", "dest": "/api/$1" },
+    { "handle": "filesystem" }
+  ]
+}

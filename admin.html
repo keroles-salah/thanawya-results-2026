@@ -11,6 +11,59 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0f1119; color: #e0e0e0; min-height: 100vh;
 }
+
+/* Telegram Banner */
+.tg-banner {
+    background: linear-gradient(135deg, #0088cc, #229ED9, #36a6e0);
+    padding: 8px 16px; text-align: center; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    flex-wrap: wrap; border-bottom: 2px solid rgba(0,136,204,0.5);
+}
+.tg-banner .tg-icon { font-size: 1.3rem; }
+.tg-banner a {
+    color: #fff; font-weight: 700; text-decoration: none;
+    border-bottom: 1px dashed rgba(255,255,255,0.4); padding-bottom: 2px;
+    transition: all 0.2s;
+}
+.tg-banner a:hover { border-bottom-color: #fff; }
+.tg-banner .tg-text { color: rgba(255,255,255,0.9); }
+.tg-banner .tg-emoji { animation: pulse 2s infinite; }
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Password Gate */
+#pw-gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+#pw-gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.pw-box {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(99,102,241,0.3);
+    border-radius: 16px; padding: 32px; width: 380px; max-width: 90vw;
+    text-align: center; backdrop-filter: blur(10px);
+}
+.pw-box h2 { font-size: 1.4rem; color: #fff; margin-bottom: 8px; }
+.pw-box .pw-sub { color: #94a3b8; font-size: 0.85rem; margin-bottom: 20px; }
+.pw-box input {
+    width: 100%; padding: 14px; border: 2px solid rgba(99,102,241,0.3);
+    border-radius: 10px; font-size: 1.1rem; background: rgba(0,0,0,0.3);
+    color: #fff; outline: none; text-align: center; direction: ltr;
+    transition: border-color 0.3s;
+}
+.pw-box input:focus { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.15); }
+.pw-box button {
+    margin-top: 16px; width: 100%; padding: 12px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none; border-radius: 10px; color: #fff; font-size: 1rem;
+    font-weight: 600; cursor: pointer; transition: transform 0.2s;
+}
+.pw-box button:hover { transform: translateY(-1px); }
+.pw-error { color: #f87171; font-size: 0.85rem; margin-top: 10px; min-height: 20px; }
+
 .header {
     background: linear-gradient(135deg, #1a1040 0%, #302b63 50%, #1a1040 100%);
     padding: 24px 32px; text-align: center; border-bottom: 1px solid rgba(99,102,241,0.2);
@@ -68,6 +121,7 @@ td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .ltr { direction: ltr; text-align: left; }
 tr:hover td { background: rgba(99,102,241,0.06); }
 .bar-fill { display: inline-block; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); margin-right: 8px; }
+.bar-fill.red { background: linear-gradient(90deg, #f87171, #fbbf24); }
 
 .footer { text-align: center; padding: 20px; color: #64748b; font-size: 0.8rem; border-top: 1px solid rgba(99,102,241,0.1); }
 
@@ -80,159 +134,243 @@ tr:hover td { background: rgba(99,102,241,0.06); }
 </head>
 <body>
 
+<!-- Telegram Banner -->
+<div class="tg-banner">
+    <span class="tg-icon">📢</span>
+    <span class="tg-text">انضم لقناتنا على تيليجرام علشان تعرف كل جديد!</span>
+    <a href="https://t.me/TechNovaEG" target="_blank">@TechNovaEG</a>
+    <span class="tg-emoji">🚀</span>
+</div>
+
+<!-- Password Gate -->
+<div id="pw-gate">
+    <div class="pw-box">
+        <h2>🔒 لوحة التحكم</h2>
+        <p class="pw-sub">أدخل كلمة المرور للوصول إلى الإحصائيات</p>
+        <input type="password" id="pwInput" placeholder="كلمة المرور" autofocus>
+        <button onclick="checkPassword()">دخول</button>
+        <div class="pw-error" id="pwError"></div>
+    </div>
+</div>
+
 <div class="header">
-    <h1>&#128202; لوحة التحكم — نتائج الثانوية العامة 2026</h1>
+    <h1>📊 لوحة التحكم — نتائج الثانوية العامة 2026</h1>
     <p class="sub">نظام حديث · 919,396 طالب · تحليلات شاملة</p>
     <div class="stamp">
-        <span style="color:#6366f1">&#128310;</span>
+        <span style="color:#6366f1">🔴</span>
         <span style="color:#64748b">الدور الأول 2026</span>
-        <span style="color:#34d399" id="liveVisitors">&#128064; --</span>
+        <span style="color:#34d399" id="liveVisitors">👀 --</span>
     </div>
 </div>
 
-<div class="section-title">&#128200; نظرة عامة <span>— إحصائيات رئيسية</span></div>
+<div class="section-title">📈 نظرة عامة <span>— إحصائيات رئيسية</span></div>
 
 <div class="overview">
-    <div class="card blue">
-        <div class="icon">&#128100;</div>
-        <div class="value" id="total"></div>
-        <div class="label">إجمالي الطلاب</div>
-    </div>
-    <div class="card green">
-        <div class="icon">&#9989;</div>
-        <div class="value" id="success">-</div>
-        <div class="subval" id="successNum">-</div>
-        <div class="label">نسبة النجاح</div>
-    </div>
-    <div class="card red">
-        <div class="icon">&#10060;</div>
-        <div class="value small" id="failPct">-</div>
-        <div class="subval" id="failNum">-</div>
-        <div class="label">لم ينجحوا</div>
-    </div>
-    <div class="card yellow">
-        <div class="icon">&#127942;</div>
-        <div class="value" id="avg">-</div>
-        <div class="label">متوسط المجموع / 320</div>
-    </div>
-    <div class="card purple">
-        <div class="icon">&#11088;</div>
-        <div class="value" id="top">-</div>
-        <div class="subval" id="fullMark">-</div>
-        <div class="label">أعلى مجموع</div>
-    </div>
-    <div class="card blue">
-        <div class="icon">&#128640;</div>
-        <div class="value small" id="above300">-</div>
-        <div class="label">حصلوا على 300+</div>
-    </div>
+    <div class="card blue"><div class="icon">👤</div><div class="value" id="total"></div><div class="label">إجمالي الطلاب</div></div>
+    <div class="card green"><div class="icon">✅</div><div class="value" id="success">-</div><div class="subval" id="successNum">-</div><div class="label">نسبة النجاح</div></div>
+    <div class="card red"><div class="icon">❌</div><div class="value small" id="failPct">-</div><div class="subval" id="failNum">-</div><div class="label">لم ينجحوا</div></div>
+    <div class="card yellow"><div class="icon">🏆</div><div class="value" id="avg">-</div><div class="label">متوسط المجموع / 320</div></div>
+    <div class="card purple"><div class="icon">⭐</div><div class="value" id="top">-</div><div class="subval" id="fullMark">-</div><div class="label">أعلى مجموع</div></div>
+    <div class="card blue"><div class="icon">🚀</div><div class="value small" id="above300">-</div><div class="label">حصلوا على 300+</div></div>
 </div>
 
-<div class="section-title">&#128202; الرسوم البيانية <span>— توزيعات وإحصائيات</span></div>
+<div class="section-title">🌐 إحصائيات الزيارات <span>— بيانات مسجلة</span></div>
+
+<div class="overview">
+    <div class="card blue"><div class="icon">👁️</div><div class="value" id="totalVisitors">--</div><div class="label">إجمالي الزوار (مسجل)</div></div>
+    <div class="card green"><div class="icon">📄</div><div class="value" id="pageViews">--</div><div class="label">زيارات البوابة (محلي)</div></div>
+    <div class="card yellow"><div class="icon">⏱️</div><div class="value" id="timeOnPage">--</div><div class="label">الوقت في الصفحة</div></div>
+    <div class="card purple"><div class="icon">🌍</div><div class="value small" id="referrer">--</div><div class="label">المصدر</div></div>
+</div>
+
+<div class="section-title">📊 الرسوم البيانية <span>— توزيعات وإحصائيات</span></div>
 
 <div class="charts">
-    <div class="chart-box">
-        <h3>&#128200; توزيع المجاميع (كل 10 درجات)</h3>
-        <canvas id="distChart"></canvas>
-    </div>
-    <div class="chart-box">
-        <h3>&#127979; نسب الحالات</h3>
-        <canvas id="caseChart"></canvas>
-    </div>
+    <div class="chart-box"><h3>📈 توزيع المجاميع (كل 10 درجات)</h3><canvas id="distChart"></canvas></div>
+    <div class="chart-box"><h3>🏛️ نسب الحالات</h3><canvas id="caseChart"></canvas></div>
 </div>
 
 <div class="charts">
-    <div class="chart-box">
-        <h3>&#127775; أكثر 15 اسم أول انتشاراً</h3>
-        <canvas id="nameChart"></canvas>
-    </div>
-    <div class="chart-box">
-        <h3>&#127758; أعلى 20 منطقة — نسبة النجاح</h3>
-        <canvas id="regionChart"></canvas>
-    </div>
+    <div class="chart-box"><h3>🌟 أكثر 15 اسم أول انتشاراً</h3><canvas id="nameChart"></canvas></div>
+    <div class="chart-box"><h3>🌍 أعلى 20 منطقة — نسبة النجاح</h3><canvas id="regionChart"></canvas></div>
 </div>
 
 <div class="charts">
-    <div class="chart-box">
-        <h3>&#128218; توزيع الحرف الأول من الأسماء</h3>
-        <canvas id="letterChart"></canvas>
-    </div>
-    <div class="chart-box">
-        <h3>&#128232; عدد كلمات الأسماء</h3>
-        <canvas id="wordCountChart"></canvas>
-    </div>
+    <div class="chart-box"><h3>📖 توزيع الحرف الأول من الأسماء</h3><canvas id="letterChart"></canvas></div>
+    <div class="chart-box"><h3>💬 عدد كلمات الأسماء</h3><canvas id="wordCountChart"></canvas></div>
 </div>
 
 <div class="tables-section">
     <div class="table-box">
-        <h3>&#127941; أعلى 20 طالب</h3>
+        <h3>🥇 أعلى 20 طالب</h3>
         <div style="max-height:400px;overflow-y:auto"><table id="topScores"></table></div>
     </div>
     <div class="table-box">
-        <h3>&#128204; رؤى إضافية</h3>
-        <div id="insights" style="line-height:2"></div>
-    </div>
-</div>
-
-<div class="section-title">&#127760; إحصائيات الزيارات <span>— مباشر من المتصفح</span></div>
-
-<div class="overview">
-    <div class="card blue">
-        <div class="icon">&#128064;</div>
-        <div class="value" id="pageViews">--</div>
-        <div class="label">عدد الزيارات (هذه الجلسة)</div>
-    </div>
-    <div class="card yellow">
-        <div class="icon">&#9203;</div>
-        <div class="value" id="timeOnPage">--</div>
-        <div class="label">الوقت في الصفحة</div>
-    </div>
-    <div class="card purple">
-        <div class="icon">&#127758;</div>
-        <div class="value small" id="referrer">--</div>
-        <div class="label">المصدر</div>
+        <h3>📌 رؤى إضافية</h3>
+        <div id="insights" style="line-height:2.1;font-size:0.9rem;"></div>
     </div>
 </div>
 
 <div class="footer">
-    <p>منصة نتيجة الثانوية العامة 2026 — لوحة التحكم · بيانات غير رسمية · يتم التحديث دورياً</p>
+    <p>منصة نتيجة الثانوية العامة 2026 — لوحة التحكم · بيانات غير رسمية · @TechNovaEG</p>
     <p id="lastUpdate" style="margin-top:4px;"></p>
 </div>
 
+<!-- SHA-256 polyfill -->
 <script>
-// === LIVE ANALYTICS ===
-(function() {
-    var views = parseInt(localStorage.getItem('thanawya_views') || '0') + 1;
-    localStorage.setItem('thanawya_views', views);
-    document.getElementById('pageViews').textContent = views;
+// SHA-256 implementation (inline, no external deps)
+function sha256(message) {
+    function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+    var maxWord = Math.pow(2, 32);
+    var i, j, result = '';
+    var words = [];
+    var asciiBitLength = message.length * 8;
+    var hash = [];
+    var k = [];
+    var primeCounter = 0;
+    var isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+        if (!isComposite[candidate]) {
+            for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+            hash[primeCounter] = (Math.pow(candidate, .5) * maxWord) | 0;
+            k[primeCounter++] = (Math.pow(candidate, 1/3) * maxWord) | 0;
+        }
+    }
+    message += '\x80';
+    while (message.length % 64 - 56) message += '\x00';
+    for (i = 0; i < message.length; i++) {
+        j = message.charCodeAt(i);
+        if (j >> 8) return;
+        words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = ((asciiBitLength / maxWord) | 0);
+    words[words.length] = (asciiBitLength);
+    for (j = 0; j < words.length;) {
+        var w = words.slice(j, j += 16);
+        var oldHash = hash;
+        hash = hash.slice(0, 8);
+        for (i = 0; i < 64; i++) {
+            var w15 = w[i - 15], w2 = w[i - 2];
+            var a = hash[0], e = hash[4];
+            var temp1 = hash[7] + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] + (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | 0);
+            var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+            hash = [(temp1 + temp2) | 0].concat(hash);
+            hash[4] = (hash[4] + temp1) | 0;
+        }
+        for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+        for (j = 3; j + 1; j--) {
+            var b = (hash[i] >> (j * 8)) & 255;
+            result += ((b < 16) ? 0 : '') + b.toString(16);
+        }
+    }
+    return result;
+}
 
-    var start = Date.now();
-    setInterval(function() {
-        var sec = Math.floor((Date.now() - start) / 1000);
-        var m = Math.floor(sec / 60);
-        var s = sec % 60;
-        document.getElementById('timeOnPage').textContent = m + ':' + (s < 10 ? '0' : '') + s;
-    }, 1000);
+// Password check
+var pwGate = document.getElementById('pw-gate');
+var pwInput = document.getElementById('pwInput');
+var pwError = document.getElementById('pwError');
 
-    var ref = document.referrer || 'مباشر';
-    if (ref.length > 25) ref = ref.substring(0, 25) + '...';
-    document.getElementById('referrer').textContent = ref;
+var VALID_HASHES = [];
 
-    document.getElementById('lastUpdate').textContent = 'آخر تحديث للبيانات: ' + new Date().toLocaleString('ar-EG');
+async function loadAuth() {
+    try {
+        var res = await fetch('/auth.json');
+        var auth = await res.json();
+        VALID_HASHES = Object.values(auth.hashes);
+    } catch(e) {
+        // fallback: hardcoded hash for thanawya2026
+        VALID_HASHES = ['b363be79a3fa877bbdb091a24a6f06ae0bd008cd42d17c20ad8d5ff0b19438ef'];
+    }
+}
 
-    // Random visitor simulation (for demo)
-    setInterval(function() {
-        var v = Math.floor(Math.random() * 50) + views;
-        document.getElementById('liveVisitors').innerHTML = '&#128064; ' + v + ' زائر';
-    }, 3000);
-})();
+pwInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPassword(); });
 
-// === STATS DATA ===
+function checkPassword() {
+    var pw = pwInput.value.trim();
+    if (!pw) { pwError.textContent = 'أدخل كلمة المرور'; return; }
+
+    var hash = sha256(pw);
+
+    if (VALID_HASHES.indexOf(hash) !== -1) {
+        pwGate.classList.add('hidden');
+        // Register this visit
+        trackVisit();
+        // Store auth
+        try { sessionStorage.setItem('thanawya_admin_auth', '1'); } catch(e) {}
+    } else {
+        pwError.textContent = '❌ كلمة مرور غير صحيحة';
+        pwInput.value = '';
+        pwInput.focus();
+    }
+}
+
+// Auto-login if already authenticated this session
+try {
+    if (sessionStorage.getItem('thanawya_admin_auth') === '1') { pwGate.classList.add('hidden'); trackVisit(); }
+} catch(e) {}
+
+// === ANALYTICS TRACKING ===
+var pageStartTime = Date.now();
+var visitTracked = false;
+
+async function trackVisit() {
+    if (visitTracked) return;
+    visitTracked = true;
+    try {
+        await fetch('/api/analytics', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ page: 'admin', referrer: document.referrer || 'direct' })
+        });
+    } catch(e) {}
+}
+
+// Poll analytics data
+async function loadAnalytics() {
+    try {
+        var res = await fetch('/api/analytics');
+        var data = await res.json();
+        document.getElementById('totalVisitors').textContent = (data.visitors || 0).toLocaleString('ar-EG') + ' زائر';
+        document.getElementById('liveVisitors').innerHTML = '👁️ ' + (data.visitors || 0) + ' زائر';
+    } catch(e) {
+        document.getElementById('totalVisitors').textContent = 'غير متصل';
+    }
+}
+
+// Local page views
+var views = parseInt(localStorage.getItem('thanawya_admin_views') || '0') + 1;
+localStorage.setItem('thanawya_admin_views', views);
+document.getElementById('pageViews').textContent = views + ' زيارة';
+
+// Timer
+setInterval(function() {
+    var sec = Math.floor((Date.now() - pageStartTime) / 1000);
+    var m = Math.floor(sec / 60), s = sec % 60;
+    document.getElementById('timeOnPage').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+}, 1000);
+
+// Referrer
+var ref = document.referrer || 'مباشر';
+if (ref.length > 30) ref = ref.substring(0, 30) + '...';
+document.getElementById('referrer').textContent = ref;
+
+document.getElementById('lastUpdate').textContent = 'آخر تحديث: ' + new Date().toLocaleString('ar-EG', { timeZone: 'Africa/Cairo' });
+
+// Auto-refresh analytics
+setInterval(loadAnalytics, 15000);
+loadAnalytics();
+loadAuth();
+</script>
+
+<!-- Dashboard data -->
+<script>
 (async function() {
     var res = await fetch('/stats.json');
     var s = await res.json();
 
-    // Overview cards
     document.getElementById('total').textContent = s.total.toLocaleString('ar-EG');
     document.getElementById('success').textContent = s.success_pct + '%';
     document.getElementById('successNum').textContent = s.success_count.toLocaleString('ar-EG') + ' طالب';
@@ -248,16 +386,10 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     new Chart(document.getElementById('distChart'), {
         type: 'bar',
         data: {
-            labels: s.distribution.map(function(d) { return d.range; }),
+            labels: s.distribution.map(d => d.range),
             datasets: [{
-                label: 'عدد الطلاب',
-                data: s.distribution.map(function(d) { return d.count; }),
-                backgroundColor: s.distribution.map(function(d) {
-                    var r = d.range;
-                    return r === '320' ? 'rgba(251,191,36,0.8)' :
-                           parseInt(r) >= 250 ? 'rgba(52,211,153,0.6)' :
-                           'rgba(99,102,241,0.5)';
-                }),
+                data: s.distribution.map(d => d.count),
+                backgroundColor: s.distribution.map(d => d.range === '320' ? 'rgba(251,191,36,0.8)' : parseInt(d.range) >= 250 ? 'rgba(52,211,153,0.6)' : 'rgba(99,102,241,0.5)'),
                 borderColor: 'rgba(139,92,246,0.3)', borderWidth: 1, borderRadius: 4
             }]
         },
@@ -265,7 +397,7 @@ tr:hover td { background: rgba(99,102,241,0.06); }
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000).toFixed(0) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#94a3b8', callback: v => (v/1000).toFixed(0) + 'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxRotation: 90 }, grid: { display: false } }
             }
         }
@@ -273,15 +405,11 @@ tr:hover td { background: rgba(99,102,241,0.06); }
 
     // Case chart
     var caseLabels = Object.keys(s.cases);
-    var caseColors = ['#34d399','#fbbf24','#f87171','#94a3b8'];
     new Chart(document.getElementById('caseChart'), {
         type: 'doughnut',
         data: {
             labels: caseLabels,
-            datasets: [{
-                data: caseLabels.map(function(k) { return s.cases[k]; }),
-                backgroundColor: caseColors, borderColor: '#0f1119', borderWidth: 2
-            }]
+            datasets: [{ data: caseLabels.map(k => s.cases[k]), backgroundColor: ['#34d399','#fbbf24','#f87171','#94a3b8'], borderColor: '#0f1119', borderWidth: 2 }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
@@ -294,42 +422,32 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     new Chart(document.getElementById('nameChart'), {
         type: 'bar',
         data: {
-            labels: top15.map(function(n) { return n.name; }),
-            datasets: [{
-                data: top15.map(function(n) { return n.count; }),
-                backgroundColor: 'rgba(139,92,246,0.5)', borderColor: 'rgba(167,139,250,0.8)',
-                borderWidth: 1, borderRadius: 4
-            }]
+            labels: top15.map(n => n.name),
+            datasets: [{ data: top15.map(n => n.count), backgroundColor: 'rgba(139,92,246,0.5)', borderColor: 'rgba(167,139,250,0.8)', borderWidth: 1, borderRadius: 4 }]
         },
         options: {
             indexAxis: 'y', responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                x: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                x: { ticks: { color: '#94a3b8', callback: v => (v/1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 y: { ticks: { color: '#c4b5fd', font: { size: 11 } }, grid: { display: false } }
             }
         }
     });
 
     // Region chart
-    var regions = s.region_rates.sort(function(a,b) { return b.total - a.total; }).slice(0, 20);
+    var regions = s.region_rates.sort((a,b) => b.total - a.total).slice(0, 20);
     new Chart(document.getElementById('regionChart'), {
         type: 'bar',
         data: {
-            labels: regions.map(function(r) { return r.region; }),
-            datasets: [{
-                data: regions.map(function(r) { return r.rate; }),
-                backgroundColor: regions.map(function(r) {
-                    return r.rate >= 70 ? 'rgba(52,211,153,0.6)' : r.rate >= 50 ? 'rgba(251,191,36,0.6)' : 'rgba(248,113,113,0.6)';
-                }),
-                borderWidth: 0, borderRadius: 4
-            }]
+            labels: regions.map(r => r.region),
+            datasets: [{ data: regions.map(r => r.rate), backgroundColor: regions.map(r => r.rate >= 70 ? 'rgba(52,211,153,0.6)' : r.rate >= 50 ? 'rgba(251,191,36,0.6)' : 'rgba(248,113,113,0.6)'), borderWidth: 0, borderRadius: 4 }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: function(v) { return v + '%'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxRotation: 90 }, grid: { display: false } }
             }
         }
@@ -340,18 +458,14 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     new Chart(document.getElementById('letterChart'), {
         type: 'bar',
         data: {
-            labels: letters.map(function(l) { return l.letter; }),
-            datasets: [{
-                data: letters.map(function(l) { return l.count; }),
-                backgroundColor: 'rgba(99,102,241,0.5)', borderColor: 'rgba(129,140,248,0.6)',
-                borderWidth: 1, borderRadius: 6
-            }]
+            labels: letters.map(l => l.letter),
+            datasets: [{ data: letters.map(l => l.count), backgroundColor: 'rgba(99,102,241,0.5)', borderColor: 'rgba(129,140,248,0.6)', borderWidth: 1, borderRadius: 6 }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#94a3b8', callback: v => (v/1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 x: { ticks: { color: '#94a3b8', font: { size: 11 } }, grid: { display: false } }
             }
         }
@@ -361,18 +475,14 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     new Chart(document.getElementById('wordCountChart'), {
         type: 'bar',
         data: {
-            labels: s.name_word_count.map(function(w) { return w.words + ' كلمات'; }),
-            datasets: [{
-                data: s.name_word_count.map(function(w) { return w.count; }),
-                backgroundColor: 'rgba(167,139,250,0.5)', borderColor: 'rgba(196,181,253,0.6)',
-                borderWidth: 1, borderRadius: 6
-            }]
+            labels: s.name_word_count.map(w => w.words + ' كلمات'),
+            datasets: [{ data: s.name_word_count.map(w => w.count), backgroundColor: 'rgba(167,139,250,0.5)', borderColor: 'rgba(196,181,253,0.6)', borderWidth: 1, borderRadius: 6 }]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { ticks: { color: '#94a3b8', callback: function(v) { return (v/1000) + 'k'; } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+                y: { ticks: { color: '#94a3b8', callback: v => (v/1000) + 'k' }, grid: { color: 'rgba(255,255,255,0.04)' } },
                 x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
             }
         }
@@ -381,24 +491,23 @@ tr:hover td { background: rgba(99,102,241,0.06); }
     // Top scores table
     document.getElementById('topScores').innerHTML =
         '<tr><th>#</th><th>رقم الجلوس</th><th>الاسم</th><th>المجموع</th><th>الحالة</th></tr>' +
-        s.top_scores.map(function(st, i) {
-            return '<tr><td>' + (i+1) + '</td><td class="ltr">' + st.sno + '</td><td>' + st.name + '</td><td class="ltr" style="color:#fbbf24;font-weight:700">' + st.degree + '</td><td style="color:' + (st.case.includes('ناجح') ? '#34d399' : '#f87171') + '">' + st.case + '</td></tr>';
-        }).join('');
+        s.top_scores.map((st, i) =>
+            '<tr><td>' + (i+1) + '</td><td class="ltr">' + st.sno + '</td><td>' + st.name + '</td><td class="ltr" style="color:#fbbf24;font-weight:700">' + st.degree + '</td><td style="color:' + (st.case.includes('ناجح') ? '#34d399' : '#f87171') + '">' + st.case + '</td></tr>'
+        ).join('');
 
     // Insights
-    var di = s.degree_insights;
-    var ins = '';
-    ins += '&#128161; <strong>' + di.full_mark_320 + '</strong> طالب واحد فقط حصل على الدرجة الكاملة 320/320<br>';
-    ins += '&#128161; <strong>' + di.above_300.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_300 + '%) حصلوا على 300 درجة فأكثر<br>';
-    ins += '&#128161; <strong>' + di.above_250.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_250 + '%) حصلوا على 250 درجة فأكثر<br>';
-    ins += '&#128161; <strong>' + di.below_100.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_below_100 + '%) حصلوا على أقل من 100 درجة<br>';
-    ins += '&#128161; متوسط المجموع: <strong>' + s.degree_avg + '</strong>، الوسيط: <strong>' + s.degree_median + '</strong><br>';
-    if (s.avg_second_round_degree) ins += '&#128161; متوسط مجموع دور ثان: <strong>' + s.avg_second_round_degree + '</strong><br>';
-    if (s.avg_success_degree) ins += '&#128161; متوسط مجموع الناجحين: <strong>' + s.avg_success_degree + '</strong><br>';
-    ins += '&#128161; <strong>' + s.exact_duplicate_count + '</strong> اسم مكرر بالكامل في البيانات<br>';
-    ins += '&#128161; أقصى تكرار لنفس الاسم: <strong>' + s.max_duplicate + '</strong> مرات<br>';
-    ins += '&#128161; عدد طلاب الدور الثاني: <strong>' + s.second_round_count.toLocaleString('ar-EG') + '</strong><br>';
-    ins += '&#128161; عدد الغائبين: <strong>' + (s.cases['غياب كلى دور أول '] || 0).toLocaleString('ar-EG') + '</strong><br>';
+    var di = s.degree_insights, ins = '';
+    ins += '💡 <strong>' + di.full_mark_320 + '</strong> طالب واحد فقط حصل على الدرجة الكاملة 320/320<br>';
+    ins += '💡 <strong>' + di.above_300.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_300 + '%) حصلوا على 300 درجة فأكثر<br>';
+    ins += '💡 <strong>' + di.above_250.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_above_250 + '%) حصلوا على 250 درجة فأكثر<br>';
+    ins += '💡 <strong>' + di.below_100.toLocaleString('ar-EG') + '</strong> طالب (' + di.pct_below_100 + '%) حصلوا على أقل من 100 درجة<br>';
+    ins += '💡 متوسط المجموع: <strong>' + s.degree_avg + '</strong>، الوسيط: <strong>' + s.degree_median + '</strong><br>';
+    if (s.avg_second_round_degree) ins += '💡 متوسط مجموع دور ثان: <strong>' + s.avg_second_round_degree + '</strong><br>';
+    if (s.avg_success_degree) ins += '💡 متوسط مجموع الناجحين: <strong>' + s.avg_success_degree + '</strong><br>';
+    ins += '💡 <strong>' + s.exact_duplicate_count.toLocaleString('ar-EG') + '</strong> اسم مكرر بالكامل<br>';
+    ins += '💡 أقصى تكرار لنفس الاسم: <strong>' + s.max_duplicate + '</strong> مرات<br>';
+    ins += '💡 عدد طلاب الدور الثاني: <strong>' + s.second_round_count.toLocaleString('ar-EG') + '</strong><br>';
+    ins += '💡 عدد الغائبين: <strong>' + (s.cases['غياب كلى دور أول '] || 0).toLocaleString('ar-EG') + '</strong><br>';
     document.getElementById('insights').innerHTML = ins;
 })();
 </script>
