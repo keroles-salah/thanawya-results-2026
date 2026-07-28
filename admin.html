@@ -177,10 +177,12 @@ tr:hover td { background: rgba(99,102,241,0.06); }
 <div class="section-title">🌐 إحصائيات الزيارات <span>— بيانات مسجلة</span></div>
 
 <div class="overview">
-    <div class="card blue"><div class="icon">👁️</div><div class="value" id="totalVisitors">--</div><div class="label">إجمالي الزوار (مسجل)</div></div>
-    <div class="card green"><div class="icon">📄</div><div class="value" id="pageViews">--</div><div class="label">زيارات البوابة (محلي)</div></div>
+    <div class="card blue"><div class="icon">👁️</div><div class="value" id="totalVisitors">--</div><div class="label">إجمالي الزوار</div></div>
+    <div class="card green"><div class="icon">📄</div><div class="value" id="searchPageViews">--</div><div class="label">زيارات صفحة البحث</div></div>
+    <div class="card purple"><div class="icon">💻</div><div class="value" id="adminPageViews2">--</div><div class="label">زيارات الداشبورد</div></div>
     <div class="card yellow"><div class="icon">⏱️</div><div class="value" id="timeOnPage">--</div><div class="label">الوقت في الصفحة</div></div>
-    <div class="card purple"><div class="icon">🌍</div><div class="value small" id="referrer">--</div><div class="label">المصدر</div></div>
+    <div class="card"><div class="icon">🌍</div><div class="value small" id="referrer">--</div><div class="label">المصدر</div></div>
+    <div class="card"><div class="icon">📄</div><div class="value" id="localPageViews">--</div><div class="label">زيارات الداشبورد (محلية)</div></div>
 </div>
 
 <div class="section-title">📊 الرسوم البيانية <span>— توزيعات وإحصائيات</span></div>
@@ -333,17 +335,23 @@ async function loadAnalytics() {
     try {
         var res = await fetch('/api/analytics');
         var data = await res.json();
-        document.getElementById('totalVisitors').textContent = (data.visitors || 0).toLocaleString('ar-EG') + ' زائر';
-        document.getElementById('liveVisitors').innerHTML = '👁️ ' + (data.visitors || 0) + ' زائر';
+        var total = (data.visitors || 0);
+        document.getElementById('totalVisitors').textContent = total.toLocaleString('ar-EG') + ' زائر';
+        document.getElementById('liveVisitors').innerHTML = '👁️ ' + total + ' زائر';
+        // Per-page counts
+        document.getElementById('searchPageViews').textContent = ((data.pages && data.pages.search) || 0).toLocaleString('ar-EG');
+        document.getElementById('adminPageViews2').textContent = ((data.pages && data.pages.admin) || 0).toLocaleString('ar-EG');
     } catch(e) {
         document.getElementById('totalVisitors').textContent = 'غير متصل';
+        document.getElementById('searchPageViews').textContent = '--';
+        document.getElementById('adminPageViews2').textContent = '--';
     }
 }
 
 // Local page views
 var views = parseInt(localStorage.getItem('thanawya_admin_views') || '0') + 1;
 localStorage.setItem('thanawya_admin_views', views);
-document.getElementById('pageViews').textContent = views + ' زيارة';
+document.getElementById('localPageViews').textContent = views + ' زيارة';
 
 // Timer
 setInterval(function() {

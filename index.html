@@ -353,6 +353,8 @@ function renderStudentCardElement(containerEl, sno, student) {
         '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + student.c + '</span></div>' +
         '</div>';
 }
+// Track visitor
+(function(){try{fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:'search',referrer:document.referrer||'direct'})});}catch(e){}})();
 </script>
 </body>
 </html>
