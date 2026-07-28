@@ -161,6 +161,7 @@ body {
     <div class="footer">
         <p>بيانات الدور الأول 2026 &mdash; نتائج غير رسمية</p>
         <p class="count">عدد الطلاب: <strong dir="ltr">919,396</strong> طالب</p>
+        <p style="margin-top:8px;font-size:0.85rem;color:#6366f1;">👁️ عدد زوار الموقع: <strong id="liveTotal" dir="ltr">--</strong></p>
     </div>
 </div>
 <script>
@@ -355,6 +356,8 @@ function renderStudentCardElement(containerEl, sno, student) {
 }
 // Track visitor
 (function(){try{fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:'search',referrer:document.referrer||'direct'})});}catch(e){}})();
+// Show live total
+(function(){try{fetch('/api/analytics').then(r=>r.json()).then(d=>{document.getElementById('liveTotal').textContent=(d.visitors||0).toLocaleString('ar-EG')+' زائر';});setInterval(function(){fetch('/api/analytics').then(r=>r.json()).then(d=>{document.getElementById('liveTotal').textContent=(d.visitors||0).toLocaleString('ar-EG')+' زائر';});},10000);}catch(e){}})();
 </script>
 </body>
 </html>
