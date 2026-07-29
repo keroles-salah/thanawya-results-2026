@@ -20,7 +20,7 @@ from html import unescape as h
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from urllib.request import Request,urlopen,HTTPCookieProcessor,build_opener,HTTPSHandler
 
-sys.stdout=io.TextIOWrapper(sys.stdout.buffer,encoding='utf-8')
+# Colab doesn't need this wrapper - it handles UTF-8 natively
 
 # CHANGE THIS for each Colab tab (1-10):
 PART=1
