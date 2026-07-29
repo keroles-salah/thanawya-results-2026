@@ -390,29 +390,57 @@ function doName(){
     loadNI().then(function(idx){
         var files=idx.char_groups[q[0]];
         if(!files){showErr('err-name','🚫 لا توجد نتائج');setLoad('load-name','btn-name',false);return}
-        var lq=q.toLowerCase(),matches=[];
-        function next(i){
-            if(i>=files.length||matches.length>=200){done();return}
-            var fn=files[i],p=nameCache[fn]?Promise.resolve(nameCache[fn]):fetch(BASE+'/name-search/'+fn).then(function(r){return r.json()});
-            p.then(function(bucket){
+        var lq=q.toLowerCase(),matches=[],doneCount=0,sortedFiles=files.slice().sort(function(a,b){return a.localeCompare(b)});
+        var c=document.getElementById('cnt-name');c.classList.remove('hide');c.innerHTML='جاري البحث في <strong>'+sortedFiles.length+'</strong> ملف...';
+        var out=document.getElementById('out-name');
+        
+        function updateCount(){c.innerHTML='تم العثور على <strong>'+matches.length+'</strong> طالب'+(matches.length>1?'ِ':'')+' (قيد التحميل...)'}
+        
+        function loadBucket(fn){
+            var p=nameCache[fn]?Promise.resolve(nameCache[fn]):fetch(BASE+'/name-search/'+fn).then(function(r){if(!r.ok)throw Error('nf');return r.json()});
+            return p.then(function(bucket){
                 nameCache[fn]=bucket;
-                for(var j=0;j<bucket.length;j++){var ename=bucket[j][1];if(ename.toLowerCase().startsWith(lq)){matches.push({sno:bucket[j][0],nm:ename});if(matches.length>=200)break}else if(matches.length>0&&ename.toLowerCase().localeCompare(lq)>0){break}}
-                if(matches.length<200&&i+1<files.length){next(i+1)}else{done()}
-            }).catch(function(){done()});
+                for(var j=0;j<bucket.length;j++){
+                    var ename=bucket[j][1];
+                    if(ename.toLowerCase().startsWith(lq)){
+                        matches.push({sno:bucket[j][0],nm:ename});
+                        if(matches.length>=200)break;
+                    }else if(matches.length>0&&ename.toLowerCase().localeCompare(lq)>0){break}
+                }
+            }).catch(function(){/* skip failed files */});
         }
-        function done(){
-            if(matches.length===0){showErr('err-name','🚫 لا توجد نتائج لـ "'+q+'"');setLoad('load-name','btn-name',false);return}
-            var c=document.getElementById('cnt-name');c.innerHTML='تم العثور على <strong>'+matches.length+'</strong> طالب'+(matches.length>1?'ِ':'');c.classList.remove('hide');
-            var out=document.getElementById('out-name');
-            Promise.all(matches.map(function(m){
-                var p=m.sno.substring(0,4);
-                return fetch(BASE+'/data/'+p+'.json').then(function(r){return r.ok?r.json():null}).then(function(b){
-                    if(b&&b[m.sno]){renderCard(out,m.sno,b[m.sno])}
-                    else{out.insertAdjacentHTML('beforeend','<div class="card"><div class="ch">🔍 نتيجة</div><div class="cb"><div class="nb"><div class="nm">'+esc(m.nm)+'</div><div class="sn">رقم الجلوس: '+m.sno+'</div></div></div></div>')}
-                });
-            })).finally(function(){setLoad('load-name','btn-name',false)});
+        
+        // Load in parallel batches (6 at a time)
+        var batchSize=6;
+        function processBatch(start){
+            if(start>=sortedFiles.length){allDone();return}
+            var batch=sortedFiles.slice(start,start+batchSize);
+            Promise.all(batch.map(function(fn){return loadBucket(fn)})).then(function(){
+                updateCount();
+                processBatch(start+batchSize);
+            });
         }
-        next(0);
+        
+        function allDone(){
+            if(matches.length===0){showErr('err-name','🚫 لا توجد نتائج لـ "'+esc(q)+'"');setLoad('load-name','btn-name',false);c.classList.add('hide');return}
+            c.innerHTML='تم العثور على <strong>'+matches.length+'</strong> طالب'+(matches.length>1?'ِ':'');
+            // Load result data in parallel batches
+            var loaded=0;
+            function loadResults(start){
+                var chunk=matches.slice(start,start+6);
+                if(chunk.length===0){setLoad('load-name','btn-name',false);return}
+                Promise.all(chunk.map(function(m){
+                    var p=m.sno.substring(0,4);
+                    return fetch(BASE+'/data/'+p+'.json').then(function(r){return r.ok?r.json():null}).then(function(b){
+                        if(b&&b[m.sno]){renderCard(out,m.sno,b[m.sno])}
+                        else{out.insertAdjacentHTML('beforeend','<div class="card"><div class="ch">🔍 نتيجة</div><div class="cb"><div class="nb"><div class="nm">'+esc(m.nm)+'</div><div class="sn">رقم الجلوس: '+m.sno+'</div></div></div></div>')}
+                    }).catch(function(){});
+                })).then(function(){loadResults(start+6)});
+            }
+            loadResults(0);
+        }
+        
+        processBatch(0);
     }).catch(function(){showErr('err-name','حدث خطأ في البحث');setLoad('load-name','btn-name',false)});
 }
 
