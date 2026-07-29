@@ -168,6 +168,17 @@ function resultUrl(sno){return BASE+'/?s='+sno}
 function showErr(id,msg){var e=document.getElementById(id);e.textContent=msg;e.classList.remove('hide')}
 function hideErr(id){document.getElementById(id).classList.add('hide')}
 
+/* Switch to seat tab and auto-search */
+function switchToSeat(sno){
+    document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('act')});
+    document.querySelector('.tb[data-tab="seat"]').classList.add('act');
+    document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('act')});
+    document.getElementById('pnl-seat').classList.add('act');
+    document.getElementById('inp-seat').value=sno;
+    doSeat();
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
 /* SEAT SEARCH */
 document.getElementById('inp-seat').addEventListener('keydown',function(e){if(e.key==='Enter')doSeat();});
 document.getElementById('btn-seat').addEventListener('click',doSeat);
@@ -249,56 +260,17 @@ function doName(){
                 out.insertAdjacentHTML('beforeend',card);
             });
 
-            // Enrich cards in background — load data files individually (never let one failure block others)
-            // Also hide loading spinners after 15s no matter what
-            var seenPrefixes=new Set();
-            matches.forEach(function(m){seenPrefixes.add(m.sno.substring(0,4))});
-            var prefixList=Array.from(seenPrefixes);
-
-            // Timeout: hide all spinners after 15 seconds
-            setTimeout(function(){
-                matches.forEach(function(m){
-                    var ld=document.getElementById('ld-'+m.sno);
-                    if(ld&&!ld.classList.contains('hide')){ld.classList.add('hide')}
-                });
-            },15000);
-
-            // Load data files individually (3 at a time to avoid rate limiting)
-            var loadQueue=prefixList.slice();
-            function loadNextData(){
-                if(loadQueue.length===0)return;
-                var batch=loadQueue.splice(0,3);
-                Promise.all(batch.map(function(px){
-                    var key='data:'+px;
-                    return (dataCache[key]?Promise.resolve(dataCache[key]):
-                        fetch(BASE+'/data/'+px+'.json').then(function(r){return r.ok?r.json():null}).then(function(d){if(d){dataCache[key]=d}return d})
-                        .catch(function(){return null})
-                    );
-                })).then(function(datas){
-                    datas.forEach(function(data){
-                        if(!data)return;
-                        matches.forEach(function(m){
-                            if(!data[m.sno])return;
-                            var s=data[m.sno],ld=document.getElementById('ld-'+m.sno);
-                            if(!ld||ld.classList.contains('hide'))return;
-                            ld.classList.add('hide');
-                            var dt=document.getElementById('dt-'+m.sno);
-                            dt.innerHTML=buildDetailHTML(m.sno,s);
-                            dt.classList.remove('hide');
-                            var card=document.getElementById('c-'+m.sno);
-                            if(card){card.querySelectorAll('.sh-btn').forEach(function(b){
-                                b.addEventListener('click',function(){
-                                    if(b.dataset.a==='wa')shareWA(b.dataset.sno,b.dataset.nm,b.dataset.dg,b.dataset.br);
-                                    if(b.dataset.a==='tg')shareTG(b.dataset.sno,b.dataset.nm,b.dataset.dg,b.dataset.br);
-                                    if(b.dataset.a==='link')copyLink(b.dataset.sno);
-                                });
-                            })}
-                        });
-                    });
-                    loadNextData();
-                });
-            }
-            loadNextData();
+            // Instead of loading huge data/ files, show a button to view full details by seat number
+            // (Seat search is fast: loads a single small JSON file)
+            matches.forEach(function(m){
+                var ld=document.getElementById('ld-'+m.sno);
+                if(!ld||ld.classList.contains('hide'))return;
+                ld.classList.add('hide');
+                var dt=document.getElementById('dt-'+m.sno);
+                dt.innerHTML='<div style="text-align:center;padding:12px 0"><button class="tb act" style="background:var(--c-blue);color:#fff;border:none;padding:10px 24px;border-radius:var(--r-sm);font-family:Cairo,sans-serif;font-size:.85rem;font-weight:700;cursor:pointer" onclick="switchToSeat(\''+m.sno+'\')">🔍 عرض النتيجة كاملة</button></div>';
+                dt.classList.remove('hide');
+            });
+            load.classList.add('hide');btn.disabled=false;
         }
 
         loadBatch();
