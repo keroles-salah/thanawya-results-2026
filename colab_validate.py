@@ -15,7 +15,7 @@
 THANAWYA DATA VALIDATOR for Google Colab - Compares our data vs live youm7
 Just change PART= at the top and run all cells.
 """
-import sys,io,json,ssl,re,time,os
+import sys,json,ssl,re,time,os
 from html import unescape as h
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from urllib.request import Request,urlopen,HTTPCookieProcessor,build_opener,HTTPSHandler
