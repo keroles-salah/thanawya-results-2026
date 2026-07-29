@@ -249,18 +249,31 @@ function doName(){
                 out.insertAdjacentHTML('beforeend',card);
             });
 
-            // Enrich cards in background (batch by prefix)
+            // Enrich cards in background — load data files individually (never let one failure block others)
+            // Also hide loading spinners after 15s no matter what
             var seenPrefixes=new Set();
             matches.forEach(function(m){seenPrefixes.add(m.sno.substring(0,4))});
             var prefixList=Array.from(seenPrefixes);
 
-            var pBatch=0;
-            function loadPrefixBatch(){
-                var chunk=prefixList.slice(pBatch,pBatch+4);pBatch+=4;
-                if(chunk.length===0)return;
-                Promise.all(chunk.map(function(px){
+            // Timeout: hide all spinners after 15 seconds
+            setTimeout(function(){
+                matches.forEach(function(m){
+                    var ld=document.getElementById('ld-'+m.sno);
+                    if(ld&&!ld.classList.contains('hide')){ld.classList.add('hide')}
+                });
+            },15000);
+
+            // Load data files individually (3 at a time to avoid rate limiting)
+            var loadQueue=prefixList.slice();
+            function loadNextData(){
+                if(loadQueue.length===0)return;
+                var batch=loadQueue.splice(0,3);
+                Promise.all(batch.map(function(px){
                     var key='data:'+px;
-                    return (dataCache[key]?Promise.resolve(dataCache[key]):fetch(BASE+'/data/'+px+'.json').then(function(r){if(!r.ok)throw Error();return r.json()}).then(function(d){dataCache[key]=d;return d}));
+                    return (dataCache[key]?Promise.resolve(dataCache[key]):
+                        fetch(BASE+'/data/'+px+'.json').then(function(r){return r.ok?r.json():null}).then(function(d){if(d){dataCache[key]=d}return d})
+                        .catch(function(){return null})
+                    );
                 })).then(function(datas){
                     datas.forEach(function(data){
                         if(!data)return;
@@ -272,20 +285,20 @@ function doName(){
                             var dt=document.getElementById('dt-'+m.sno);
                             dt.innerHTML=buildDetailHTML(m.sno,s);
                             dt.classList.remove('hide');
-                            // Attach share listeners
                             var card=document.getElementById('c-'+m.sno);
-                            card.querySelectorAll('.sh-btn').forEach(function(b){
+                            if(card){card.querySelectorAll('.sh-btn').forEach(function(b){
                                 b.addEventListener('click',function(){
                                     if(b.dataset.a==='wa')shareWA(b.dataset.sno,b.dataset.nm,b.dataset.dg,b.dataset.br);
                                     if(b.dataset.a==='tg')shareTG(b.dataset.sno,b.dataset.nm,b.dataset.dg,b.dataset.br);
                                     if(b.dataset.a==='link')copyLink(b.dataset.sno);
                                 });
-                            });
+                            })}
                         });
                     });
-                }).catch(function(){}).finally(function(){loadPrefixBatch()});
+                    loadNextData();
+                });
             }
-            loadPrefixBatch();
+            loadNextData();
         }
 
         loadBatch();
