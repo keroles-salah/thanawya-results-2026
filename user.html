@@ -9,9 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--c-bg:#0a0a0f;--c-card:#141420;--c-border:#222233;--c-input:#0f0f15;--c-primary:#f1f5f9;--c-secondary:#94a3b8;--c-muted:#64748b;--c-success:#22c55e;--c-danger:#ef4444;--c-gold:#f59e0b;--c-purple:#8b5cf6;--c-blue:#3b82f6;--c-blue-hover:#2563eb;--r:12px;--r-sm:8px;--r-xs:6px;--shadow:0 1px 3px rgba(0,0,0,.4);--shadow-lg:0 4px 16px rgba(0,0,0,.5)}
+:root{--c-bg:#0a0a0f;--c-card:#141420;--c-border:#222233;--c-input:#0f0f15;--c-primary:#f1f5f9;--c-secondary:#94a3b8;--c-muted:#64748b;--c-success:#22c55e;--c-danger:#ef4444;--c-gold:#f59e0b;--c-blue:#3b82f6;--c-blue-hover:#2563eb;--r:12px;--r-sm:8px}
 html{scroll-behavior:smooth}
-body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary);min-height:100vh;line-height:1.7;-webkit-font-smoothing:antialiased;padding-top:44px}
+body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary);min-height:100vh;line-height:1.7;padding-top:44px}
 .bnr{position:fixed;top:0;left:0;right:0;z-index:50;height:44px;background:var(--c-tg);color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;font-size:.8rem;font-weight:600}
 .bnr a{color:#fff;font-weight:800;text-decoration:none;background:rgba(255,255,255,.18);padding:3px 12px;border-radius:20px;transition:background .2s}
 .bnr a:hover{background:rgba(255,255,255,.28)}
@@ -21,23 +21,20 @@ body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary
 .hero p{color:var(--c-secondary);font-size:.9rem;font-weight:500}
 .hero-stats{display:flex;justify-content:center;gap:12px;margin-top:18px;flex-wrap:wrap}
 .hs{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:12px 20px;text-align:center;min-width:100px;transition:border-color .25s}
-.hs:hover{border-color:var(--c-muted)}
 .hs-num{font-size:1.3rem;font-weight:800;color:var(--c-blue)}
 .hs-lbl{font-size:.7rem;color:var(--c-muted);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:20px;background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:4px}
-.tb{padding:12px 16px;border:none;background:transparent;color:var(--c-secondary);font-size:.9rem;font-weight:600;font-family:'Cairo',sans-serif;cursor:pointer;border-radius:var(--r-xs);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px}
-.tb.act{background:var(--c-blue);color:#fff;box-shadow:var(--shadow)}
+.tb{padding:12px 16px;border:none;background:transparent;color:var(--c-secondary);font-size:.9rem;font-weight:600;font-family:'Cairo',sans-serif;cursor:pointer;border-radius:6px;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tb.act{background:var(--c-blue);color:#fff}
 .tb:hover:not(.act){color:var(--c-primary);background:rgba(255,255,255,.03)}
-.pnl{display:none}
-.pnl.act{display:block}
+.pnl{display:none}.pnl.act{display:block}
 .sg{display:flex;gap:8px;margin-bottom:18px}
 .sg input{flex:1;padding:14px 18px;border:1px solid var(--c-border);border-radius:var(--r-sm);background:var(--c-input);color:#fff;font-size:1.05rem;font-family:'Cairo',sans-serif;outline:none;transition:border-color .25s;direction:ltr;text-align:center;letter-spacing:.06em;font-weight:700}
 .sg input:focus{border-color:var(--c-blue)}
 .sg input::placeholder{color:var(--c-muted);letter-spacing:0;font-weight:400;font-size:.9rem}
 .sg input.ar{direction:rtl;text-align:right;letter-spacing:0;font-weight:500}
 .sg button{padding:14px 24px;border:none;border-radius:var(--r-sm);background:var(--c-blue);color:#fff;font-size:1rem;font-weight:700;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .25s;white-space:nowrap}
-.sg button:hover{background:var(--c-blue-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.3)}
-.sg button:active{transform:translateY(0)}
+.sg button:hover{background:var(--c-blue-hover);transform:translateY(-1px)}
 .sg button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .sk-wrap{text-align:center;padding:32px}
 .sk{width:28px;height:28px;border:3px solid var(--c-border);border-top-color:var(--c-blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
@@ -45,57 +42,18 @@ body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary
 .err{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:var(--r-sm);padding:16px 20px;color:#fca5a5;text-align:center;font-size:.9rem;margin-bottom:12px}
 .rc{text-align:center;padding:10px 16px;margin-bottom:10px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.1);border-radius:var(--r-sm);color:var(--c-blue);font-weight:600;font-size:.82rem}
 .rc strong{color:#93c5fd}
-.card{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-lg);margin-bottom:16px;animation:slideUp .45s cubic-bezier(.16,1,.3,1)}
+.card{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.5);margin-bottom:16px;animation:slideUp .45s cubic-bezier(.16,1,.3,1)}
 @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .ch{padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:1.05rem;font-weight:700;color:#fff;border-bottom:1px solid var(--c-border)}
 .ch.ok{background:rgba(34,197,94,.04)}
-.ch.no{background:rgba(239,68,68,.04)}
-.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.dot.g{background:var(--c-success);box-shadow:0 0 8px rgba(34,197,94,.3)}
-.dot.r{background:var(--c-danger);box-shadow:0 0 8px rgba(239,68,68,.3)}
-.cb{padding:24px}
-.nb{text-align:center;margin-bottom:22px}
-.nb .nm{font-size:1.3rem;font-weight:800;color:#fff;line-height:1.7;margin-bottom:6px}
-.nb .sn{font-size:.8rem;color:var(--c-muted);letter-spacing:0}
-.tgs{display:flex;justify-content:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
-.tg-b{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:20px;font-size:.76rem;font-weight:600;border:1px solid transparent}
-.tg-b.branch{background:rgba(139,92,246,.08);color:#c4b5fd;border-color:rgba(139,92,246,.15)}
-.tg-b.school{background:rgba(59,130,246,.06);color:#93c5fd;border-color:rgba(59,130,246,.12)}
-.tg-b.pct{background:rgba(245,158,11,.06);color:var(--c-gold);border-color:rgba(245,158,11,.12)}
-.sc{text-align:center;margin-bottom:22px}
-.sc-ring{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:100px;height:100px;border-radius:50%;background:rgba(245,158,11,.05);border:2px solid rgba(245,158,11,.15)}
-.sc-num{font-size:2rem;font-weight:900;color:var(--c-gold);line-height:1}
-.sc-max{font-size:.68rem;color:var(--c-muted);margin-top:2px}
-.stl{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border);margin-bottom:20px}
-.stl label{font-size:.82rem;color:var(--c-secondary)}
-.stl span{font-size:.85rem;font-weight:700}
-.stl span.ok{color:var(--c-success)}
-.stl span.no{color:var(--c-danger)}
-.rnks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.rk{background:var(--c-bg);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:16px 12px;text-align:center;transition:border-color .25s}
-.rk:hover{border-color:var(--c-muted)}
-.rk .ri{font-size:1.15rem;margin-bottom:4px}
-.rk .rl{font-size:.68rem;color:var(--c-muted);margin-bottom:4px}
-.rk .rv{font-size:1.1rem;font-weight:800;color:var(--c-gold)}
-.btn-view{display:inline-block;background:var(--c-blue);color:#fff;border:none;padding:10px 28px;border-radius:var(--r-sm);font-family:Cairo,sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .25s;text-decoration:none}
-.btn-view:hover{background:var(--c-blue-hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.3)}
-.share{padding:24px 0 0;margin-top:24px;border-top:1px solid var(--c-border)}
-.share .sh-title{text-align:center;color:var(--c-muted);font-size:.78rem;font-weight:600;margin-bottom:14px}
-.sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.sh-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 10px;border-radius:var(--r-sm);border:1px solid transparent;font-size:.82rem;font-weight:600;font-family:'Cairo',sans-serif;cursor:pointer;transition:all .25s;color:#fff}
-.sh-btn:hover{transform:translateY(-1px)}
-.sh-btn.wa{background:rgba(37,211,102,.08);border-color:rgba(37,211,102,.15);color:#4ade80}
-.sh-btn.tg{background:rgba(0,136,204,.08);border-color:rgba(0,136,204,.15);color:#38bdf8}
-.sh-btn.link{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.1);color:var(--c-gold)}
-.qr{text-align:center}
-.qr img{border-radius:var(--r-sm);background:#fff;padding:6px;box-shadow:var(--shadow)}
-.qr .qr-note{font-size:.7rem;color:var(--c-muted);margin-top:6px}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;background:var(--c-success);color:#fff;padding:12px 28px;border-radius:25px;font-weight:700;font-family:'Cairo',sans-serif;font-size:.88rem;box-shadow:0 8px 30px rgba(34,197,94,.4);animation:toastIn .3s ease-out}
-@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.ft{text-align:center;margin-top:40px;color:var(--c-muted);font-size:.75rem;padding:20px}
-.ft strong{color:var(--c-secondary)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--c-success);box-shadow:0 0 8px rgba(34,197,94,.3)}
+.cb{padding:24px;text-align:center}
+.nm{font-size:1.3rem;font-weight:800;color:#fff;line-height:1.7;margin-bottom:6px}
+.sn{font-size:.8rem;color:var(--c-muted);margin-bottom:18px}
+.result-card-btn{display:inline-block;background:var(--c-blue);color:#fff;border:none;padding:12px 32px;border-radius:var(--r-sm);font-family:'Cairo',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .25s;text-decoration:none}
+.result-card-btn:hover{background:var(--c-blue-hover);transform:translateY(-2px);box-shadow:0 4px 16px rgba(59,130,246,.35)}
 .hide{display:none!important}
-@media(max-width:500px){.hero{padding:24px 0}.sg{flex-direction:column}.sg button{width:100%}.rnks{grid-template-columns:1fr}.hero-stats{gap:8px}.hs{padding:8px 14px;min-width:80px}.hs-num{font-size:1.05rem}.cb{padding:18px}.ch{padding:14px 18px}.share{padding:18px 0 0;margin-top:18px}}
+@media(max-width:500px){.hero{padding:24px 0}.sg{flex-direction:column}.sg button{width:100%}.cb{padding:18px}.ch{padding:14px 18px}}
 </style>
 </head>
 <body>
@@ -116,7 +74,7 @@ body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary
 </div>
 <div class="pnl act" id="pnl-seat">
 <div class="sg">
-<input type="text" id="inp-seat" placeholder="أدخل رقم الجلوس (٧ أرقام)" inputmode="numeric" autocomplete="off" autofocus>
+<input type="text" id="inp-seat" placeholder="ادخل رقم الجلوس (٧ ارقام)" inputmode="numeric" autocomplete="off" autofocus>
 <button id="btn-seat">بحث</button>
 </div>
 <div id="load-seat" class="sk-wrap hide"><div class="sk"></div><div>جاري البحث...</div></div>
@@ -128,198 +86,123 @@ body{font-family:'Cairo',sans-serif;background:var(--c-bg);color:var(--c-primary
 <input type="text" id="inp-name" class="ar" placeholder="اكتب الاسم للبحث..." autocomplete="off">
 <button id="btn-name">بحث</button>
 </div>
-<div id="load-name" class="sk-wrap hide"><div class="sk"></div><div>جاري البحث في 919,396 طالب...</div></div>
+<div id="load-name" class="sk-wrap hide"><div class="sk"></div><div>جاري البحث...</div></div>
 <div id="err-name" class="err hide"></div>
 <div id="cnt-name" class="rc hide"></div>
 <div id="out-name"></div>
 </div>
-<div class="ft"><strong>NovaTech</strong> — بيانات الدور الأول 2026</div>
 </div>
 
 <script>
 var BASE='https://keroles-sala.me/thanawya-results-2026';
-var nameIndex=null,nameCache={};
+var nameDB=null;
 
-document.getElementById('tabs').addEventListener('click',function(e){
-    var btn=e.target.closest('.tb');if(!btn)return;
-    this.querySelectorAll('.tb').forEach(function(b){b.classList.remove('act')});
-    btn.classList.add('act');
+/* Tabs */
+document.getElementById('tabs').onclick=function(e){
+    var b=e.target.closest('.tb');if(!b)return;
+    this.querySelectorAll('.tb').forEach(function(x){x.classList.remove('act')});
+    b.classList.add('act');
     document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('act')});
-    document.getElementById('pnl-'+btn.dataset.tab).classList.add('act');
-    if(btn.dataset.tab==='seat')document.getElementById('inp-seat').focus();
-    else document.getElementById('inp-name').focus();
-});
+    document.getElementById('pnl-'+b.dataset.tab).classList.add('act');
+};
 
-function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
-function fmtNum(n){return Number(n).toLocaleString('en-US')}
-function resultUrl(sno){return BASE+'/?s='+sno}
-function showErr(id,msg){var e=document.getElementById(id);e.textContent=msg;e.classList.remove('hide')}
-function hideErr(id){document.getElementById(id).classList.add('hide')}
+/* Helpers */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+function fmt(n){return Number(n).toLocaleString('en-US')}
+function rurl(s){return BASE+'/?s='+s}
 
-/* ===== SWITCH TO SEAT TAB ===== */
-function switchToSeat(sno){
-    document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('act')});
-    document.querySelector('.tb[data-tab=seat]').classList.add('act');
-    document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('act')});
-    document.getElementById('pnl-seat').classList.add('act');
-    document.getElementById('inp-seat').value=sno;
-    doSeat();
-    window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ===== SEAT SEARCH (fast - small JSON file) ===== */
-document.getElementById('inp-seat').addEventListener('keydown',function(e){if(e.key==='Enter')doSeat();});
-document.getElementById('btn-seat').addEventListener('click',doSeat);
+/* Seat search */
+document.getElementById('inp-seat').onkeydown=function(e){if(e.key==='Enter')doSeat()};
+document.getElementById('btn-seat').onclick=doSeat;
 function doSeat(){
     var sno=document.getElementById('inp-seat').value.trim();
-    if(!sno)return;
-    if(!/^\d{7}$/.test(sno)){showErr('err-seat','رقم الجلوس يجب أن يكون ٧ أرقام');return}
-    var load=document.getElementById('load-seat'),btn=document.getElementById('btn-seat');
-    load.classList.remove('hide');btn.disabled=true;
-    hideErr('err-seat');document.getElementById('out-seat').innerHTML='';
-    var cc=new AbortController();
-    setTimeout(function(){cc.abort()},10000);
-    fetch(BASE+'/data/'+sno.substring(0,4)+'.json',{signal:cc.signal})
-        .then(function(r){if(!r.ok)throw Error();return r.json()})
-        .then(function(b){var s=b[sno];if(!s)throw Error();renderCard('out-seat',sno,s)})
-        .catch(function(){showErr('err-seat','لا توجد نتيجة لرقم الجلوس '+sno)})
-        .finally(function(){load.classList.add('hide');btn.disabled=false});
+    if(!/^\d{7}$/.test(sno))return;
+    var load=document.getElementById('load-seat'),btn=document.getElementById('btn-seat'),out=document.getElementById('out-seat'),err=document.getElementById('err-seat');
+    load.classList.remove('hide');btn.disabled=true;err.classList.add('hide');out.innerHTML='';
+    var ac=new AbortController();setTimeout(function(){ac.abort()},10000);
+    fetch(BASE+'/data/'+sno.substring(0,4)+'.json',{signal:ac.signal}).then(function(r){return r.ok?r.json():null}).then(function(d){
+        if(!d||!d[sno]){err.classList.remove('hide');err.textContent='لا توجد نتيجة لرقم الجلوس '+sno;return}
+        var s=d[sno],ok=s.c.indexOf('ناجح')>=0||(s.st||'').indexOf('ناجح')>=0,st=s.st||s.c;
+        var h='';
+        h+='<div class="card"><div class="ch ok"><span class="dot"></span> نتيجة الطالب</div><div class="cb">';
+        h+='<div class="nm">'+esc(s.n)+'</div><div class="sn">رقم الجلوس: '+sno+'</div>';
+        if(s.b)h+='<div style="display:inline-block;background:rgba(139,92,246,.08);color:#c4b5fd;border:1px solid rgba(139,92,246,.15);border-radius:20px;padding:6px 14px;font-size:.76rem;font-weight:600;margin-bottom:16px">🎓 '+esc(s.b)+'</div>';
+        h+='<div style="margin-bottom:16px"><div style="display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:100px;height:100px;border-radius:50%;background:rgba(245,158,11,.05);border:2px solid rgba(245,158,11,.15)"><span style="font-size:2rem;font-weight:900;color:#f59e0b">'+s.d+'</span><span style="font-size:.68rem;color:var(--c-muted)">من 320</span></div></div>';
+        h+='<div style="display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border);margin-bottom:16px"><span style="font-size:.82rem;color:var(--c-secondary)">الحالة</span><span style="font-weight:700;color:'+(ok?'#22c55e':'#ef4444')+'">'+esc(st)+'</span></div>';
+        if(s.rank||s.rk_b){h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">';if(s.rank)h+='<div style="background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;padding:16px;text-align:center"><div>🏆</div><div style="font-size:.68rem;color:var(--c-muted)">الترتيب العام</div><div style="font-size:1.1rem;font-weight:800;color:#f59e0b">#'+fmt(s.rank)+'</div></div>';if(s.rk_b)h+='<div style="background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;padding:16px;text-align:center"><div>🎯</div><div style="font-size:.68rem;color:var(--c-muted)">في '+(s.b||'غير محدد')+'</div><div style="font-size:1.1rem;font-weight:800;color:#f59e0b">#'+fmt(s.rk_b)+'</div></div>';h+='</div>'}
+        h+='<div style="text-align:center"><a class="result-card-btn" href="'+rurl(sno)+'" target="_blank">عرض النتيجة كاملة</a></div>';
+        h+='</div></div>';
+        out.innerHTML=h;
+    }).catch(function(){err.classList.remove('hide');err.textContent='لا توجد نتيجة لرقم الجلوس '+sno}).finally(function(){load.classList.add('hide');btn.disabled=false});
 }
 
-/* ===== NAME SEARCH (parallel file loading, instant results) ===== */
-document.getElementById('inp-name').addEventListener('keydown',function(e){if(e.key==='Enter')doName();});
-document.getElementById('btn-name').addEventListener('click',doName);
-
-function loadNI(){
-    if(nameIndex)return Promise.resolve(nameIndex);
-    return fetch(BASE+'/name-search/char_index.json').then(function(r){return r.json()}).then(function(d){nameIndex=d;return d});
-}
+/* Name search — loads name DB once, then searches locally (instant!) */
+document.getElementById('inp-name').onkeydown=function(e){if(e.key==='Enter')doName()};
+document.getElementById('btn-name').onclick=doName;
 
 function doName(){
     var q=document.getElementById('inp-name').value.trim();
-    if(!q||q.length<3){showErr('err-name','اكتب ٣ أحرف على الأقل');return}
-    var load=document.getElementById('load-name'),btn=document.getElementById('btn-name'),
-        cnt=document.getElementById('cnt-name'),out=document.getElementById('out-name');
-    load.classList.remove('hide');btn.disabled=true;hideErr('err-name');out.innerHTML='';cnt.classList.add('hide');
-
-    loadNI().then(function(idx){
+    if(!q||q.length<3){document.getElementById('err-name').classList.remove('hide');document.getElementById('err-name').textContent='اكتب ٣ احرف على الاقل';return}
+    var load=document.getElementById('load-name'),btn=document.getElementById('btn-name'),cnt=document.getElementById('cnt-name'),out=document.getElementById('out-name'),err=document.getElementById('err-name');
+    load.classList.remove('hide');btn.disabled=true;err.classList.add('hide');out.innerHTML='';cnt.classList.add('hide');
+    
+    /* Step 1: Load char index (small, fast) */
+    fetch(BASE+'/name-search/char_index.json').then(function(r){return r.json()}).then(function(idx){
         var files=idx.char_groups[q[0]];
-        if(!files){
-            showErr('err-name','لا توجد نتائج للبحث');load.classList.add('hide');btn.disabled=false;return;
-        }
-        var lq=q.toLowerCase(),matches=[],remaining=files.slice(),CONCURRENT=12;
-        cnt.classList.remove('hide');
-        cnt.innerHTML='جاري البحث في '+remaining.length+' ملف...';
-
-        function loadNext(){
-            var batch=remaining.splice(0,CONCURRENT);
-            if(batch.length===0){renderAll();return}
-            var promises=batch.map(function(fn){
-                if(nameCache[fn])return Promise.resolve(nameCache[fn]);
-                return fetch(BASE+'/name-search/'+fn)
-                    .then(function(r){return r.ok?r.json():null})
-                    .catch(function(){return null});
+        if(!files){err.classList.remove('hide');err.textContent='لا توجد نتائج للبحث';load.classList.add('hide');btn.disabled=false;return;}
+        var allBuckets={},loaded=0,total=files.length,lq=q.toLowerCase(),matches=[];
+        cnt.classList.remove('hide');cnt.innerHTML='0 / '+total+' ملف...';
+        /* Step 2: Load ALL name-search files in parallel (no batches, just go!) */
+        files.forEach(function(fn){
+            fetch(BASE+'/name-search/'+fn).then(function(r){return r.json()}).then(function(bucket){
+                allBuckets[fn]=bucket;
+                loaded++;cnt.innerHTML=loaded+' / '+total+' ملف...';
+                if(loaded>=total)renderResults();
+            }).catch(function(){
+                loaded++;cnt.innerHTML=loaded+' / '+total+' ملف...';
+                if(loaded>=total)renderResults();
             });
-            Promise.all(promises).then(function(buckets){
-                buckets.forEach(function(bucket){
-                    if(!bucket)return;
-                    for(var j=0;j<bucket.length;j++){
-                        var ename=bucket[j][1];
-                        if(ename.toLowerCase().startsWith(lq)){
-                            matches.push({sno:bucket[j][0],nm:ename});
-                            if(matches.length>=200)break;
-                        } else if(matches.length>0&&ename.toLowerCase().localeCompare(lq)>0) break;
-                    }
-                });
-                cnt.innerHTML='جاري البحث... تم العثور على '+matches.length+' طالب';
-                if(matches.length>=200){remaining=[];renderAll();}else{loadNext();}
-            });
-        }
-
-        function renderAll(){
+        });
+        /* Step 3: When all loaded, search and render */
+        function renderResults(){
             load.classList.add('hide');btn.disabled=false;
-            if(matches.length===0){
-                showErr('err-name','لا توجد نتائج لـ "'+esc(q)+'"');
-                cnt.classList.add('hide');return;
+            /* Search across all loaded buckets */
+            var sortedKeys=Object.keys(allBuckets).sort();
+            for(var i=0;i<sortedKeys.length;i++){
+                var bucket=allBuckets[sortedKeys[i]];if(!bucket)continue;
+                for(var j=0;j<bucket.length;j++){
+                    var ename=bucket[j][1];
+                    if(ename.toLowerCase().startsWith(lq)){
+                        matches.push(bucket[j]);
+                        if(matches.length>=200){i=sortedKeys.length;break;}
+                    }
+                }
             }
+            if(matches.length===0){err.classList.remove('hide');err.textContent='لا توجد نتائج لـ "'+q+'"';cnt.classList.add('hide');return;}
             cnt.innerHTML='تم العثور على '+matches.length+' طالب';
+            /* Build HTML */
             var html='';
-            matches.forEach(function(m){
-                html+='<div class="card">';
-                html+='<div class="ch ok"><span class="dot g"></span> نتيجة الطالب</div>';
-                html+='<div class="cb" style="padding:18px;text-align:center">';
-                html+='<div class="nb"><div class="nm">'+esc(m.nm)+'</div><div class="sn">رقم الجلوس: '+m.sno+'</div></div>';
-                html+='<button class="btn-view" onclick="switchToSeat(\''+m.sno+'\')">عرض النتيجة كاملة</button>';
-                html+='</div></div>';
-            });
+            for(var k=0;k<matches.length;k++){
+                var m=matches[k],sno=m[0],nm=m[1];
+                html+='<div class="card"><div class="ch ok"><span class="dot"></span> نتيجة الطالب</div><div class="cb"><div class="nm">'+esc(nm)+'</div><div class="sn">رقم الجلوس: '+sno+'</div><a class="result-card-btn" href="'+rurl(sno)+'" target="_blank">عرض النتيجة كاملة</a></div></div>';
+            }
             out.innerHTML=html;
         }
-
-        loadNext();
-    }).catch(function(){
-        showErr('err-name','حدث خطأ في التحميل');
-        load.classList.add('hide');btn.disabled=false;
-    });
+    }).catch(function(){err.classList.remove('hide');err.textContent='حدث خطأ — حاول مرة اخرى';load.classList.add('hide');btn.disabled=false;});
 }
 
-/* ===== RENDER CARD (used by seat search + URL auto-search) ===== */
-function renderCard(container,sno,s){
-    var out=typeof container==='string'?document.getElementById(container):container;
-    var isOk=s.c.indexOf('ناجح')>=0||(s.st&&s.st.indexOf('ناجح')>=0);
-    var h='<div class="card">';
-    h+='<div class="ch '+(isOk?'ok':'no')+'"><span class="dot '+(isOk?'g':'r')+'"></span> '+(isOk?'✅':'⚠️')+' نتيجة الطالب</div>';
-    h+='<div class="cb" style="text-align:center"><div class="nb"><div class="nm">'+esc(s.n)+'</div><div class="sn">رقم الجلوس: '+sno+'</div></div>';
-    if(s.b||s.s||s.pct){h+='<div class="tgs">';if(s.b)h+='<span class="tg-b branch">🎓 '+esc(s.b)+'</span>';if(s.s)h+='<span class="tg-b school">🏫 '+esc(s.s)+'</span>';if(s.pct)h+='<span class="tg-b pct">📊 '+esc(s.pct)+'</span>';h+='</div>'}
-    h+='<div class="sc"><div class="sc-ring"><span class="sc-num">'+s.d+'</span><span class="sc-max">من 320</span></div></div>';
-    var st=s.st||s.c;
-    h+='<div class="stl"><label>الحالة</label><span class="'+(isOk?'ok':'no')+'">'+esc(st)+'</span></div>';
-    if(s.rank||s.rk_b){h+='<div class="rnks">';if(s.rank)h+='<div class="rk"><div class="ri">🏆</div><div class="rl">الترتيب العام</div><div class="rv">#'+fmtNum(s.rank)+'</div></div>';if(s.rk_b)h+='<div class="rk"><div class="ri">🎯</div><div class="rl">الترتيب في '+(s.b||'غير محدد')+'</div><div class="rv">#'+fmtNum(s.rk_b)+'</div></div>';h+='</div>'}
-    if(s.sub&&s.sub.length>0)h+='<div style="text-align:center;color:var(--c-muted);font-size:.72rem;padding:10px;border-top:1px solid var(--c-border)">✅ النتيجة متاحة — تم إخفاء درجات المواد في هذه الصفحة</div>';
-    h+='<div class="share" style="border-top:none;padding-top:8px"><div class="sh-title">📤 شارك النتيجة</div><div class="sh-grid">';
-    h+='<button class="sh-btn wa" onclick="shareWA(\''+sno+'\',\''+s.n.replace(/'/g,"\\'")+'\',\''+s.d+'\',\''+(s.b||'')+'\')">💬 واتساب</button>';
-    h+='<button class="sh-btn tg" onclick="shareTG(\''+sno+'\',\''+s.n.replace(/'/g,"\\'")+'\',\''+s.d+'\',\''+(s.b||'')+'\')">✈️ تيليجرام</button>';
-    h+='<button class="sh-btn link" onclick="copyLink(\''+sno+'\')">🔗 نسخ الرابط</button>';
-    h+='</div><div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data='+encodeURIComponent(resultUrl(sno))+'" alt="QR" loading="lazy" onerror="this.style.display=\'none\'"><div class="qr-note">اسكن الكود لعرض النتيجة</div></div></div>';
-    h+='</div></div>';
-    out.insertAdjacentHTML('beforeend',h);
-}
-
-/* ===== SHARE ===== */
-function shareWA(sno,name,deg,branch){
-    var m='🎓 *نتيجة الثانوية العامة 2026*%0A%0A👤 *الاسم:* '+name+'%0A🔢 *رقم الجلوس:* '+sno+'%0A📊 *المجموع:* '+deg+' / 320%0A';
-    if(branch)m+='🎯 *الشعبة:* '+branch+'%0A';
-    m+='%0A🔗 شوف نتيجتك كاملة:%0A'+resultUrl(sno)+'%0A%0A✨ *ألف مبروك ومن نجاح لنجاح يارب!* 🥰❤️';
-    window.open('https://wa.me/?text='+m,'_blank');
-}
-function shareTG(sno,name,deg,branch){
-    var m='🎓 *نتيجة الثانوية العامة 2026*%0A%0A👤 *الاسم:* '+name+'%0A🔢 *رقم الجلوس:* '+sno+'%0A📊 *المجموع:* '+deg+' / 320%0A';
-    if(branch)m+='🎯 *الشعبة:* '+branch+'%0A';
-    m+='%0A🔗 شوف نتيجتك كاملة:%0A'+resultUrl(sno)+'%0A%0A✨ *ألف مبروك ومن نجاح لنجاح يارب!* 🥰❤️';
-    window.open('https://t.me/share/url?url='+encodeURIComponent(resultUrl(sno))+'&text='+encodeURIComponent(m),'_blank');
-}
-function copyLink(sno){
-    var url=resultUrl(sno);
-    if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('تم نسخ الرابط!')});return}
-    var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();
-    document.execCommand('copy');document.body.removeChild(ta);toast('تم نسخ الرابط!');
-}
-function toast(msg){
-    var t=document.createElement('div');t.className='toast';t.textContent=msg;
-    document.body.appendChild(t);setTimeout(function(){t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(function(){t.remove()},300)},2200);
-}
-
-/* ===== FIREBASE ANALYTICS ===== */
+/* Firebase */
 !function(){try{
     var vk='visitors/'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
     fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/'+vk+'.json',{method:'PUT',body:JSON.stringify({page:'user',ref:document.referrer||'direct',time:new Date().toISOString()})});
     fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/total.json').then(function(r){return r.json()}).then(function(d){fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/total.json',{method:'PUT',body:JSON.stringify((d||0)+1)})});
 }catch(e){}}();
 
-/* ===== AUTO-SEARCH FROM URL ===== */
+/* Auto-search from URL */
 !function(){
     var p=new URLSearchParams(location.search),s=p.get('s');
     if(s&&/^\d{7}$/.test(s)){document.getElementById('inp-seat').value=s;setTimeout(doSeat,400)}
-}();
+    }();
 </script>
 </body>
 </html>
