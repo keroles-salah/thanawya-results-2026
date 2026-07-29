@@ -435,7 +435,7 @@ function loadNI(){if(nameIndex)return Promise.resolve(nameIndex);return fetch(BA
 function renderCard(container,sno,s){
     var isOk=s.c.indexOf('ناجح')>=0||(s.st&&s.st.indexOf('ناجح')>=0);
     var cardId='c'+Date.now()+Math.random().toString(36).substr(2,4);
-    var out=document.getElementById(container);
+    var out=typeof container==='string'?document.getElementById(container):container;
 
     /* Build HTML string */
     var h='<div class="card" id="'+cardId+'">';
