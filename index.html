@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>نتيجة الثانوية العامة 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ===== RESET & FONTS ===== */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Almarai:wght@400;700;800&display=swap');
@@ -308,6 +309,55 @@ body{
 .footer .footer-brand{color:var(--primary-light);font-weight:700}
 .footer .footer-divider{color:rgba(255,255,255,0.08);margin:0 10px}
 
+/* Share section */
+.share-section{
+    padding:16px 22px 22px;
+    border-top:1px solid var(--border);margin-top:6px;
+}
+.share-title{
+    text-align:center;color:var(--text-muted);font-size:0.82rem;font-weight:600;
+    margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.share-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 14px;border-radius:var(--radius-sm);
+    border:1px solid transparent;font-size:0.88rem;font-weight:700;font-family:'Cairo',sans-serif;
+    cursor:pointer;transition:all 0.3s;color:#fff;backdrop-filter:blur(20px);
+    position:relative;overflow:hidden;
+}
+.share-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.08);opacity:0;transition:opacity 0.3s}
+.share-btn:hover::after{opacity:1}
+.share-btn:hover{transform:translateY(-2px)}
+.share-btn:active{transform:translateY(0)}
+.share-whatsapp{background:rgba(37,211,102,0.2);border-color:rgba(37,211,102,0.3)}
+.share-whatsapp:hover{box-shadow:0 6px 25px rgba(37,211,102,0.25)}
+.share-telegram{background:rgba(0,136,204,0.2);border-color:rgba(0,136,204,0.3)}
+.share-telegram:hover{box-shadow:0 6px 25px rgba(0,136,204,0.25)}
+.share-download{background:rgba(99,102,241,0.2);border-color:rgba(99,102,241,0.3)}
+.share-download:hover{box-shadow:0 6px 25px rgba(99,102,241,0.25)}
+.share-copy{background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.25)}
+.share-copy:hover{box-shadow:0 6px 25px rgba(245,158,11,0.2)}
+.share-btn .btn-icon{font-size:1.2rem}
+.qr-container{
+    text-align:center;padding:10px 0;display:flex;align-items:center;justify-content:center;gap:14px;
+    flex-wrap:wrap;
+}
+.qr-container canvas{border-radius:12px;background:#fff;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.qr-note{color:var(--text-dim);font-size:0.73rem;text-align:center}
+.toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;
+    background:var(--success);color:#fff;padding:12px 24px;border-radius:25px;
+    font-weight:700;font-family:'Cairo',sans-serif;font-size:0.9rem;
+    box-shadow:0 8px 30px rgba(16,185,129,0.4);
+    animation:toastIn 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+/* QR code library (inline tiny version) */
+.qr-loading{color:var(--text-dim);font-size:0.8rem;padding:10px}
+@media (max-width:500px){
+    .share-grid{grid-template-columns:1fr}
+}
 /* ===== HIDDEN ===== */
 .hidden{display:none!important}
 
@@ -630,8 +680,111 @@ function renderStudentCardElement(containerEl,sno,student){
         html+='</div></div>';
     }
 
+    // === SHARE SECTION ===
+    var cardId='card-'+Date.now()+'-'+Math.random().toString(36).substr(2,5);
+    html+='<div class="share-section">';
+    html+='<div class="share-title">📤 شارك النتيجة</div>';
+    html+='<div class="share-grid">';
+    html+='<button class="share-btn share-whatsapp" onclick="shareWhatsApp(\''+sno+'\',\''+escapeHTML(student.n)+'\',\''+student.d+'\',\''+(student.b||'')+'\')"><span class="btn-icon">💬</span> واتساب</button>';
+    html+='<button class="share-btn share-telegram" onclick="shareTelegram(\''+sno+'\',\''+escapeHTML(student.n)+'\',\''+student.d+'\',\''+(student.b||'')+'\')"><span class="btn-icon">✈️</span> تيليجرام</button>';
+    html+='<button class="share-btn share-download" onclick="downloadResultImage(\''+cardId+'\',\''+sno+'\')"><span class="btn-icon">🖼️</span> تحميل كصورة</button>';
+    html+='<button class="share-btn share-copy" onclick="copyResultLink(\''+sno+'\')"><span class="btn-icon">🔗</span> نسخ الرابط</button>';
     html+='</div>';
+    html+='<div class="qr-container" id="qr-'+cardId+'"><span class="qr-loading">📱 جاري تحميل QR...</span></div>';
+    html+='<div class="qr-note">اسكن الكود علشان تشوف النتيجة</div>';
+    html+='</div>';
+
+    html+='</div>';
+    html=html.replace('class="result-card"','class="result-card" id="'+cardId+'"');
     containerEl.innerHTML+=html;
+
+    // Generate QR code after card is rendered
+    setTimeout(function(){generateQR('qr-'+cardId,sno);},100);
+}
+
+// ===== SHARE FUNCTIONS =====
+function escapeHTML(str){return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+
+function getResultURL(sno){return 'https://keroles-sala.me/thanawya-results-2026/?s='+sno}
+
+function shareWhatsApp(sno,name,degree,branch){
+    var msg='🎓 *نتيجة الثانوية العامة 2026*%0A%0A';
+    msg+='👤 *الاسم:* '+name+'%0A';
+    msg+='🔢 *رقم الجلوس:* '+sno+'%0A';
+    msg+='📊 *المجموع:* '+degree+' / 320%0A';
+    if(branch)msg+='🎯 *الشعبة:* '+branch+'%0A';
+    msg+='%0A🔗 شوف نتيجتك كاملة:%0A'+getResultURL(sno)+'%0A%0A✨ *ألف مبروك ومن نجاح لنجاح يارب!* 🥰❤️';
+    window.open('https://wa.me/?text='+msg,'_blank');
+}
+
+function shareTelegram(sno,name,degree,branch){
+    var msg='🎓 *نتيجة الثانوية العامة 2026*\n\n';
+    msg+='👤 *الاسم:* '+name+'\n';
+    msg+='🔢 *رقم الجلوس:* '+sno+'\n';
+    msg+='📊 *المجموع:* '+degree+' / 320\n';
+    if(branch)msg+='🎯 *الشعبة:* '+branch+'\n';
+    msg+='\n🔗 شوف نتيجتك كاملة:\n'+getResultURL(sno)+'\n\n✨ *ألف مبروك ومن نجاح لنجاح يارب!* 🥰❤️';
+    window.open('https://t.me/share/url?url='+encodeURIComponent(getResultURL(sno))+'&text='+encodeURIComponent(msg),'_blank');
+}
+
+function downloadResultImage(cardId,sno){
+    var card=document.getElementById(cardId);
+    if(!card)return;
+    // Temporarily hide share section for clean screenshot
+    var shareSection=card.querySelector('.share-section');
+    if(shareSection)shareSection.style.display='none';
+    html2canvas(card,{
+        backgroundColor:'#0a0d18',
+        scale:2,
+        useCORS:true,
+        logging:false
+    }).then(function(canvas){
+        if(shareSection)shareSection.style.display='';
+        var link=document.createElement('a');
+        link.download='نتيجة-'+sno+'.png';
+        link.href=canvas.toDataURL('image/png');
+        link.click();
+        showToast('✅ تم تحميل الصورة!');
+    }).catch(function(e){
+        if(shareSection)shareSection.style.display='';
+        showToast('❌ حدث خطأ. حاول مرة أخرى.');
+    });
+}
+
+function copyResultLink(sno){
+    var url=getResultURL(sno);
+    if(navigator.clipboard){
+        navigator.clipboard.writeText(url).then(function(){showToast('✅ تم نسخ الرابط!');});
+    }else{
+        var ta=document.createElement('textarea');ta.value=url;
+        document.body.appendChild(ta);ta.select();
+        document.execCommand('copy');document.body.removeChild(ta);
+        showToast('✅ تم نسخ الرابط!');
+    }
+}
+
+function showToast(msg){
+    var t=document.getElementById('toast');
+    if(t)t.remove();
+    t=document.createElement('div');t.id='toast';t.className='toast';
+    t.textContent=msg;document.body.appendChild(t);
+    setTimeout(function(){t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(function(){t.remove();},300);},2500);
+}
+
+// ===== QR CODE (inline implementation - no library needed) =====
+function generateQR(containerId,sno){
+    var container=document.getElementById(containerId);
+    if(!container)return;
+    var url=getResultURL(sno);
+    // Use Google Charts QR API (fast, reliable, no library)
+    var img=document.createElement('img');
+    img.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data='+encodeURIComponent(url);
+    img.style.borderRadius='12px';
+    img.style.background='#fff';
+    img.style.padding='8px';
+    img.style.boxShadow='0 4px 20px rgba(0,0,0,0.3)';
+    img.onload=function(){container.innerHTML='';container.appendChild(img);};
+    img.onerror=function(){container.innerHTML='<span style="color:#f87171;font-size:0.8rem">⚠️ تعذر تحميل QR</span>';};
 }
 
 // ===== FIREBASE TRACKING =====
@@ -648,6 +801,16 @@ function renderStudentCardElement(containerEl,sno,student){
             .then(r=>r.json()).then(d=>fetch('https://f-o-x-284eb-default-rtdb.firebaseio.com/analytics/pages/search.json',
             {method:'PUT',body:JSON.stringify((d||0)+1)}));
     }catch(e){}
+})();
+
+// ===== AUTO-SEARCH FROM URL (?s=SEAT_NO) =====
+(function(){
+    var params=new URLSearchParams(window.location.search);
+    var sno=params.get('s');
+    if(sno&&/^\d{7}$/.test(sno)){
+        document.getElementById('seatingNo').value=sno;
+        setTimeout(function(){searchBySeating();},600);
+    }
 })();
 </script>
 </body>
