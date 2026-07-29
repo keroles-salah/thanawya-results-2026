@@ -383,9 +383,17 @@ function renderStudentCardElement(containerEl, sno, student) {
     // Status + Rank
     var statusText = student.st || student.c;
     html += '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + statusText + '</span></div>';
+    // Unified rank
     if (student.rank) {
         var rankText = typeof student.rank === 'number' ? '#' + student.rank.toLocaleString('en-US') : '#' + String(student.rank);
-        html += '<div class="field"><span class="label">\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0639\u0644\u0649 \u0627\u0644\u062C\u0645\u0647\u0648\u0631\u064A\u0629</span><span class="value rank ltr">' + rankText + '</span></div>';
+        html += '<div class="field"><span class="label">\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0639\u0627\u0645</span><span class="value rank ltr">' + rankText + '</span></div>';
+    }
+
+    // Branch-specific rank
+    if (student.rk_b) {
+        var branchRankText = typeof student.rk_b === 'number' ? '#' + student.rk_b.toLocaleString('en-US') : '#' + String(student.rk_b);
+        var branchLabel = (student.b || '\u063A\u064A\u0631 \u0645\u062D\u062F\u062F');
+        html += '<div class="field"><span class="label">\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0641\u064A \u0627\u0644\u0634\u0639\u0628\u0629</span><span class="value rank ltr">' + branchRankText + ' <span style="color:#c4b5fd;font-size:0.75rem">(' + branchLabel + ')</span></span></div>';
     }
 
     // Subjects table
