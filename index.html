@@ -104,6 +104,26 @@ body {
 .value.name { color: #fff; font-size: 0.95rem; }
 .value.degree { color: #fbbf24; font-size: 1.05rem; }
 .value.case { color: #34d399; }
+.value.case-fail { color: #f87171; }
+.value.branch { color: #c4b5fd; font-size: 0.95rem; }
+.value.pct { color: #fbbf24; font-weight: 700; }
+.value.rank { color: #fde68a; font-size: 0.8rem; }
+/* Subjects table */
+.subjects-section { padding: 0 18px 14px; }
+.subjects-title { color: #a5b4fc; font-size: 0.85rem; font-weight: 600; margin: 10px 0 6px; text-align: center; }
+.subjects-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.subjects-table th { background: rgba(99,102,241,0.18); color: #94a3b8; padding: 8px 6px; text-align: right; font-weight: 500; }
+.subjects-table th:last-child { text-align: center; }
+.subjects-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #e2e8f0; }
+.subjects-table td:last-child { text-align: center; color: #94a3b8; }
+.subjects-table tr:hover td { background: rgba(99,102,241,0.06); }
+.subjects-table .na { color: #475569; font-style: italic; }
+/* Extra info row */
+.field-row { display: flex; gap: 8px; padding: 8px 18px; flex-wrap: wrap; justify-content: center; }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.badge-branch { background: rgba(99,102,241,0.2); color: #c4b5fd; border: 1px solid rgba(99,102,241,0.3); }
+.badge-school { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.25); }
+.badge-pct { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
 .name-results-count {
     text-align: center; color: #6366f1; font-size: 0.85rem; padding: 8px; margin-bottom: 8px;
 }
@@ -340,18 +360,48 @@ function renderStudentCard(containerId, sno, student) {
 }
 
 function renderStudentCardElement(containerEl, sno, student) {
-    const isSuccess = student.c.includes('\u0646\u0627\u062C\u062D');
+    const isSuccess = student.c.includes('\u0646\u0627\u062C\u062D') || (student.st && student.st.includes('\u0646\u0627\u062C\u062D'));
     const emoji = isSuccess ? '\u2705' : '\u26A0\uFE0F';
-    const caseClass = isSuccess ? 'case' : '';
+    const caseClass = isSuccess ? 'case' : 'case-fail';
 
-    containerEl.innerHTML +=
-        '<div class="result-card">' +
+    var html = '<div class="result-card">' +
         '<div class="result-header">' + emoji + ' \u0646\u062A\u064A\u062C\u0629 \u0627\u0644\u0637\u0627\u0644\u0628</div>' +
         '<div class="field"><span class="label">\u0631\u0642\u0645 \u0627\u0644\u062C\u0644\u0648\u0633</span><span class="value ltr">' + sno + '</span></div>' +
-        '<div class="field"><span class="label">\u0627\u0644\u0627\u0633\u0645</span><span class="value name">' + student.n + '</span></div>' +
-        '<div class="field"><span class="label">\u0627\u0644\u0645\u062C\u0645\u0648\u0639</span><span class="value degree ltr">' + student.d + ' / 320</span></div>' +
-        '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + student.c + '</span></div>' +
-        '</div>';
+        '<div class="field"><span class="label">\u0627\u0644\u0627\u0633\u0645</span><span class="value name">' + student.n + '</span></div>';
+
+    // Branch + School type badges
+    if (student.b || student.s) {
+        html += '<div class="field-row">';
+        if (student.b) html += '<span class="badge badge-branch">\uD83C\uDF93 ' + student.b + '</span>';
+        if (student.s) html += '<span class="badge badge-school">\uD83C\uDFEB ' + student.s + '</span>';
+        if (student.pct) html += '<span class="badge badge-pct">\uD83D\uDCCA ' + student.pct + '</span>';
+        html += '</div>';
+    }
+
+    html += '<div class="field"><span class="label">\u0627\u0644\u0645\u062C\u0645\u0648\u0639</span><span class="value degree ltr">' + student.d + ' / 320</span></div>';
+
+    // Status + Rank
+    var statusText = student.st || student.c;
+    html += '<div class="field"><span class="label">\u0627\u0644\u062D\u0627\u0644\u0629</span><span class="value ' + caseClass + '">' + statusText + '</span></div>';
+    if (student.rank) {
+        html += '<div class="field"><span class="label">\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u0639\u0644\u0649 \u0627\u0644\u062C\u0645\u0647\u0648\u0631\u064A\u0629</span><span class="value rank ltr">' + student.rank.replace('#','') + '</span></div>';
+    }
+
+    // Subjects table
+    if (student.sub && student.sub.length > 0) {
+        html += '<div class="subjects-section"><div class="subjects-title">\uD83D\uDCDD \u062F\u0631\u062C\u0627\u062A \u0627\u0644\u0645\u0648\u0627\u062F</div>';
+        html += '<table class="subjects-table"><thead><tr><th>\u0627\u0644\u0645\u0627\u062F\u0629</th><th>\u0627\u0644\u062F\u0631\u062C\u0629</th></tr></thead><tbody>';
+        for (var i = 0; i < student.sub.length; i++) {
+            var s = student.sub[i];
+            var mark = s.mark || '';
+            var isNA = mark.includes('\u063A\u064A\u0631 \u0645\u0642\u0631\u0631') || mark.includes('\u063A\u0627\u0626\u0628');
+            html += '<tr><td>' + s.subject + '</td><td class="' + (isNA ? 'na' : 'ltr') + '">' + (mark || '-') + '</td></tr>';
+        }
+        html += '</tbody></table></div>';
+    }
+
+    html += '</div>';
+    containerEl.innerHTML += html;
 }
 
 // === Visitor tracking via Firebase ===
