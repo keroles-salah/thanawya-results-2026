@@ -1,408 +1,130 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>نتيجة الثانوية العامة 2026 — المنصة متوقفة</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-/* ===== RESET & TOKENS ===== */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-    --bg:#06060e;
-    --surface:#0e0f1d;
-    --surface2:#141525;
-    --border:#1e1f35;
-    --border-lit:#2a2b48;
-    --text:#eaeaef;
-    --text2:#9596b0;
-    --text3:#5d5e78;
-    --gold:#f59e0b;
-    --gold-bg:rgba(245,158,11,.06);
-    --gold-bd:rgba(245,158,11,.15);
-    --purple:#8b5cf6;
-    --purple-bg:rgba(139,92,246,.06);
-    --purple-bd:rgba(139,92,246,.15);
-    --blue:#3b82f6;
-    --blue-bg:rgba(59,130,246,.06);
-    --red:#ef4444;
-    --r:16px;
-    --r-sm:10px;
-}
-
-body{
-    font-family:'Cairo',system-ui,-apple-system,sans-serif;
-    background:var(--bg);color:var(--text);
-    min-height:100vh;line-height:1.7;
-    display:flex;align-items:center;justify-content:center;
-    overflow-x:hidden;
-}
-
-/* ===== STARS BACKGROUND ===== */
-.stars{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0}
-.star{
-    position:absolute;border-radius:50%;background:#fff;
-    animation:twinkle var(--d) ease-in-out infinite;
-    animation-delay:var(--delay);
-    opacity:0;
-}
-@keyframes twinkle{
-    0%,100%{opacity:.15;transform:scale(1)}
-    50%{opacity:.55;transform:scale(1.8)}
-}
-
-/* ===== MAIN ===== */
-.page{
-    position:relative;z-index:1;
-    max-width:1000px;width:100%;
-    padding:32px 20px;
-    margin:0 auto;
-}
-.columns{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    align-items:start;
-}
-
-/* ===== LOGO ===== */
-.logo{
-    width:80px;height:80px;border-radius:50%;
-    background:linear-gradient(135deg,var(--purple),#6366f1);
-    margin:0 auto 24px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:2.4rem;
-    box-shadow:0 0 60px rgba(139,92,246,.25),0 0 120px rgba(99,102,241,.08);
-    animation:float 3s ease-in-out infinite;
-}
-@keyframes float{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
-}
-
-/* ===== MESSAGE CARD ===== */
-.card-wrap{text-align:center}
-.card{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--r);
-    padding:36px 28px;
-    margin-bottom:24px;
-    box-shadow:0 8px 40px rgba(0,0,0,.4);
-    position:relative;
-    overflow:hidden;
-}
-.card::before{
-    content:'';position:absolute;top:0;left:0;right:0;
-    height:3px;
-    background:linear-gradient(90deg,var(--gold),var(--purple),var(--blue));
-}
-.card h1{
-    font-size:1.4rem;font-weight:800;color:#fff;
-    margin-bottom:8px;line-height:1.5;
-}
-.card .sub{
-    font-size:.92rem;color:var(--text2);
-    margin-bottom:20px;line-height:1.8;
-}
-.card .sub strong{color:var(--gold);font-weight:700}
-
-/* ===== STATUS BADGE ===== */
-.badge-wrap{display:flex;justify-content:center;gap:8px;margin-bottom:24px;flex-wrap:wrap}
-.badge{
-    display:inline-flex;align-items:center;gap:6px;
-    padding:8px 16px;border-radius:24px;
-    font-size:.78rem;font-weight:600;
-}
-.badge-stop{
-    background:rgba(239,68,68,.06);
-    border:1px solid rgba(239,68,68,.15);
-    color:#fca5a5;
-}
-.badge-hours{
-    background:var(--blue-bg);
-    border:1px solid rgba(59,130,246,.15);
-    color:#93c5fd;
-}
-.badge-students{
-    background:var(--gold-bg);
-    border:1px solid var(--gold-bd);
-    color:var(--gold);
-}
-
-/* ===== DIVIDER ===== */
-.divider{
-    display:flex;align-items:center;gap:12px;margin:24px 0;
-    color:var(--text3);font-size:.75rem;font-weight:600;
-    text-transform:uppercase;letter-spacing:.08em;
-}
-.divider::before,.divider::after{
-    content:'';flex:1;height:1px;
-    background:var(--border);
-}
-
-/* ===== CREATOR CARD ===== */
-.creator-wrap{text-align:center}
-.creator{
-    background:var(--surface2);
-    border:1px solid var(--border);
-    border-radius:var(--r);
-    padding:28px 24px 24px;
-    margin-bottom:24px;
-    box-shadow:0 4px 20px rgba(0,0,0,.2);
-}
-.creator-avatar{
-    width:72px;height:72px;border-radius:50%;
-    background:linear-gradient(135deg,var(--gold),#d97706);
-    margin:0 auto 14px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.8rem;font-weight:900;color:#fff;
-    box-shadow:0 0 30px rgba(245,158,11,.2);
-}
-.creator h2{
-    font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:4px;
-}
-.creator .role{
-    font-size:.82rem;color:var(--text3);
-    margin-bottom:18px;
-}
-
-/* ===== SOCIAL GRID ===== */
-.social-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);
-    gap:10px;margin-bottom:8px;
-}
-.social-link{
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    padding:14px 8px;
-    border-radius:var(--r-sm);
-    text-decoration:none;
-    transition:all .25s cubic-bezier(.16,1,.3,1);
-    border:1px solid transparent;
-    position:relative;overflow:hidden;
-}
-.social-link:hover{transform:translateY(-2px)}
-.social-link .icon-wrap{
-    width:44px;height:44px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1.2rem;transition:all .25s;
-}
-.social-link .label{
-    font-size:.72rem;font-weight:600;
-    font-family:'Cairo',sans-serif;
-}
-
-/* YouTube */
-.sl-yt{border-color:rgba(239,68,68,.12);background:rgba(239,68,68,.03)}
-.sl-yt:hover{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2)}
-.sl-yt .icon-wrap{background:rgba(239,68,68,.12);color:#ef4444}
-.sl-yt .label{color:#fca5a5}
-
-/* GitHub */
-.sl-gh{border-color:rgba(148,163,184,.1);background:rgba(148,163,184,.02)}
-.sl-gh:hover{background:rgba(148,163,184,.06);border-color:rgba(148,163,184,.18)}
-.sl-gh .icon-wrap{background:rgba(148,163,184,.1);color:#94a3b8}
-.sl-gh .label{color:var(--text2)}
-
-/* LinkedIn */
-.sl-li{border-color:rgba(59,130,246,.12);background:rgba(59,130,246,.03)}
-.sl-li:hover{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2)}
-.sl-li .icon-wrap{background:rgba(59,130,246,.12);color:#3b82f6}
-.sl-li .label{color:#93c5fd}
-
-/* Portfolio */
-.sl-pf{border-color:rgba(139,92,246,.12);background:rgba(139,92,246,.03)}
-.sl-pf:hover{background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.2)}
-.sl-pf .icon-wrap{background:rgba(139,92,246,.12);color:#8b5cf6}
-.sl-pf .label{color:#c4b5fd}
-
-/* Facebook */
-.sl-fb{border-color:rgba(59,130,246,.12);background:rgba(59,130,246,.03)}
-.sl-fb:hover{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.2)}
-.sl-fb .icon-wrap{background:rgba(59,130,246,.1);color:#1877f2}
-.sl-fb .label{color:#93c5fd}
-
-/* Email */
-.sl-em{border-color:rgba(245,158,11,.12);background:rgba(245,158,11,.03)}
-.sl-em:hover{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.2)}
-.sl-em .icon-wrap{background:rgba(245,158,11,.12);color:#f59e0b}
-.sl-em .label{color:var(--gold)}
-
-/* Full-width socials */
-.social-full{
-    display:grid;grid-template-columns:1fr 1fr;gap:8px;
-    margin-top:6px;
-}
-.sl-full{
-    display:flex;align-items:center;gap:10px;
-    padding:12px 18px;border-radius:var(--r-sm);
-    text-decoration:none;
-    transition:all .25s;border:1px solid transparent;
-    font-family:'Cairo',sans-serif;
-}
-.sl-full .fw-icon{
-    width:38px;height:38px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:1rem;flex-shrink:0;
-}
-.sl-full .fw-info{text-align:right}
-.sl-full .fw-name{font-size:.78rem;font-weight:700}
-.sl-full .fw-handle{font-size:.68rem;color:var(--text3);margin-top:1px}
-
-/* ===== NUMBER STATS ===== */
-.numbers{
-    display:grid;grid-template-columns:repeat(3,1fr);
-    gap:8px;margin:20px 0 0;
-}
-.num-box{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--r-sm);
-    padding:16px 10px;text-align:center;
-}
-.num-box .value{
-    font-size:1.4rem;font-weight:900;
-    background:linear-gradient(135deg,var(--gold),var(--purple));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-}
-.num-box .lbl{
-    font-size:.68rem;color:var(--text3);
-    margin-top:2px;font-weight:500;
-}
-
-/* ===== FOOTER ===== */
-.footer{
-    color:var(--text3);font-size:.72rem;line-height:1.8;
-    padding-top:8px;
-}
-.footer span{color:var(--gold);font-weight:600}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width:768px){
-    .columns{grid-template-columns:1fr;max-width:560px;margin:0 auto}
-}
-@media (max-width:480px){
-    .page{padding:24px 14px}
-    .card{padding:28px 18px}
-    .social-grid{grid-template-columns:repeat(3,1fr);gap:6px}
-    .social-link{padding:12px 4px}
-    .social-link .icon-wrap{width:38px;height:38px;font-size:1rem}
-    .social-full{grid-template-columns:1fr}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070816" />
+  <meta name="description" content="صفحة توقف منصة نتيجة الثانوية العامة 2026 وروابط مطور المنصة." />
+  <title>نتيجة الثانوية العامة 2026 — المنصة متوقفة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#070816;
+      --panel:#101226;
+      --panel-2:#151833;
+      --panel-3:#0c0e1d;
+      --text:#f5f7ff;
+      --muted:#a9afc7;
+      --soft:#737a99;
+      --line:rgba(255,255,255,.10);
+      --gold:#f6b23c;
+      --purple:#8b5cf6;
+      --blue:#4f8cff;
+      --red:#ff5f73;
+      --radius:26px;
+      --shadow:0 30px 90px rgba(0,0,0,.42);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:"Cairo",system-ui,-apple-system,Segoe UI,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top right,rgba(139,92,246,.28),transparent 34rem),
+        radial-gradient(circle at bottom left,rgba(79,140,255,.18),transparent 31rem),
+        linear-gradient(135deg,#060713 0%,#0b0d1d 55%,#070816 100%);
+      line-height:1.8;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.28;
+      background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);
+      background-size:34px 34px;
+      mask-image:linear-gradient(to bottom,#000,transparent 82%);
+    }
+    a{text-decoration:none;color:inherit}
+    .shell{position:relative;z-index:1;width:min(1120px,100%);margin:auto;padding:32px 18px 28px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:34px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-.02em}
+    .brand-icon{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),#5f70ff);box-shadow:0 16px 45px rgba(139,92,246,.28);font-size:1.45rem}
+    .year{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.06);color:#d7dcf0;font-weight:800;font-size:.82rem}
+    .hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:22px;align-items:stretch}
+    .card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));box-shadow:var(--shadow);backdrop-filter:blur(18px);overflow:hidden}
+    .main-card{position:relative;padding:42px;min-height:520px;display:flex;flex-direction:column;justify-content:space-between}
+    .main-card::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--gold),var(--purple),var(--blue))}
+    .status{width:max-content;display:inline-flex;align-items:center;gap:10px;margin-bottom:24px;padding:10px 16px;border:1px solid rgba(255,95,115,.20);border-radius:999px;background:rgba(255,95,115,.09);color:#ffd4da;font-weight:800;font-size:.83rem}
+    .status-dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 6px rgba(255,95,115,.13)}
+    h1{max-width:620px;font-size:clamp(2.25rem,5vw,4.1rem);line-height:1.18;font-weight:900;letter-spacing:-.055em;margin-bottom:20px}
+    .lead{max-width:650px;color:#d4d9ec;font-size:1.04rem;line-height:2.15}
+    .lead strong{color:var(--gold);font-weight:900}
+    .thanks{margin-top:18px;color:#c8cde2;font-size:1rem;line-height:2.05}
+    .thanks strong{color:#fff}
+    .impact-row{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:34px}
+    .stat,.note{border:1px solid var(--line);border-radius:20px;background:rgba(5,7,18,.34);padding:18px}
+    .stat-value{display:block;color:var(--gold);font-size:2.05rem;font-weight:900;line-height:1;letter-spacing:-.05em;direction:ltr;text-align:right}
+    .stat-label,.note{color:var(--muted);font-weight:700;font-size:.86rem}
+    .note{display:flex;align-items:center;gap:12px}.note span:first-child{font-size:1.45rem}
+    .profile-card{display:flex;flex-direction:column}
+    .profile-head{position:relative;padding:30px 28px 26px;text-align:center;background:radial-gradient(circle at top,rgba(246,178,60,.22),transparent 16rem),linear-gradient(135deg,rgba(139,92,246,.22),rgba(79,140,255,.14))}
+    .avatar{width:92px;height:92px;margin:0 auto 16px;border:4px solid rgba(255,255,255,.16);border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),#d8871e);box-shadow:0 18px 45px rgba(246,178,60,.18);font-size:1.65rem;font-weight:900;color:#fff}
+    h2{font-size:1.28rem;font-weight:900;margin-bottom:4px}
+    .role{direction:ltr;text-align:center;color:#b6bdd5;font-size:.82rem;font-weight:700}
+    .socials{display:grid;gap:10px;padding:22px}
+    .social{display:flex;align-items:center;gap:12px;min-height:62px;padding:11px 13px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.045);transition:.2s ease}
+    .social:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.075)}
+    .icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:0 0 auto;font-weight:900;font-size:.85rem}
+    .yt .icon{background:rgba(255,76,92,.14);color:#ff8a98}.gh .icon{background:rgba(255,255,255,.10);color:#e2e8f0}.li .icon{background:rgba(79,140,255,.14);color:#84b2ff}.pf .icon{background:rgba(139,92,246,.16);color:#c8b5ff}.em .icon{background:rgba(246,178,60,.15);color:#ffd184}
+    .meta{min-width:0;flex:1}.name{display:block;font-size:.86rem;font-weight:900;color:#fff}.handle{display:block;direction:ltr;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--soft);font-size:.72rem;font-weight:700}
+    .arrow{color:#6f7692;font-weight:900;font-size:1.1rem}.footer{text-align:center;color:#777f9c;font-size:.76rem;margin-top:26px}
+    @media (max-width:860px){.hero{grid-template-columns:1fr}.main-card{min-height:auto}.profile-card{max-width:640px;width:100%;margin:auto}}
+    @media (max-width:560px){.shell{padding:20px 12px}.topbar{margin-bottom:22px}.brand-icon{width:42px;height:42px;border-radius:15px}.year{font-size:.72rem;padding:8px 11px}.year span{display:none}.main-card{padding:30px 20px}.impact-row{grid-template-columns:1fr}.socials{padding:16px}.profile-head{padding:25px 18px 22px}h1{font-size:2.15rem}.lead,.thanks{font-size:.93rem}.stat-value{font-size:1.85rem}}
+  </style>
 </head>
 <body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon">🎓</span><span>منصة النتائج</span></div>
+      <div class="year"><span>الثانوية العامة</span> 2026</div>
+    </header>
 
-<!-- Stars -->
-<div class="stars" id="stars"></div>
-
-<!-- Main -->
-<div class="page">
-
-    <!-- Logo -->
-    <div class="logo">🎓</div>
-
-    <div class="columns">
-
-    <!-- Message Card -->
-    <div class="card-wrap">
-    <div class="card">
-        <h1>المنصة توقفت 🕊️</h1>
-        <p class="sub">
-            الحمد لله، قدرنا نساعد <strong>أكتر من ١٥٠,٠٠٠ طالب وطالبة</strong> يعرفوا نتيجتهم
-            بسهولة وبدون تعقيد. المنصة كانت معمولة بكل حب عشان توفّر عليكم الوقت
-            والمجهود، والحمد لله كانت تجربة جميلة جداً ✨
-        </p>
-        <p class="sub">
-            شكراً لكل واحد دخل ووثق فينا، وشكراً لكل حد شارك اللينك مع أصحابه.
-            <strong>ده نجاحنا كلنا مع بعض.</strong> ❤️
-        </p>
-
-        <div class="badge-wrap">
-            <span class="badge badge-stop"><i class="fa-solid fa-circle" style="font-size:.45rem"></i> المنصة متوقفة حالياً</span>
+    <main class="hero">
+      <section class="card main-card" aria-labelledby="page-title">
+        <div>
+          <div class="status"><span class="status-dot" aria-hidden="true"></span>المنصة متوقفة حالياً</div>
+          <h1 id="page-title">المنصة توقفت، شكراً من القلب.</h1>
+          <p class="lead">الحمد لله، قدرنا نساعد <strong>أكتر من ١٥٠,٠٠٠ طالب وطالبة</strong> يعرفوا نتيجتهم بسهولة وبدون تعقيد. المنصة كانت معمولة بكل حب عشان توفّر عليكم الوقت والمجهود، والحمد لله كانت تجربة جميلة جداً.</p>
+          <p class="thanks">شكراً لكل واحد دخل ووثق فينا، وشكراً لكل حد شارك اللينك مع أصحابه. <strong>ده نجاحنا كلنا مع بعض.</strong></p>
         </div>
-    </div>
-
-    </div><!-- /card-wrap -->
-
-    <!-- Creator Card -->
-    <div class="creator-wrap">
-    <div class="creator">
-        <div class="creator-avatar">KS</div>
-        <h2>كيرلس صلاح فخري</h2>
-        <p class="role">Computer Science — Assiut University</p>
-
-        <!-- Main Social Grid -->
-        <div class="social-grid">
-            <a href="https://www.youtube.com/@kerlssalah" target="_blank" class="social-link sl-yt">
-                <div class="icon-wrap"><i class="fa-brands fa-youtube"></i></div>
-                <span class="label">YouTube</span>
-            </a>
-            <a href="https://github.com/keroles-salah" target="_blank" class="social-link sl-gh">
-                <div class="icon-wrap"><i class="fa-brands fa-github"></i></div>
-                <span class="label">GitHub</span>
-            </a>
-            <a href="https://www.linkedin.com/in/kerolessalah05/" target="_blank" class="social-link sl-li">
-                <div class="icon-wrap"><i class="fa-brands fa-linkedin-in"></i></div>
-                <span class="label">LinkedIn</span>
-            </a>
+        <div class="impact-row" aria-label="أثر المنصة">
+          <div class="stat"><span class="stat-value">+١٥٠,٠٠٠</span><span class="stat-label">طالب وطالبة استخدموا المنصة</span></div>
+          <div class="note"><span>🕊️</span><span>تجربة بسيطة اتعملت بحب وانتهت بأثر كبير.</span></div>
         </div>
+      </section>
 
-        <!-- Second Row -->
-        <div class="social-full">
-            <a href="https://keroles-sala.me/" target="_blank" class="sl-full sl-pf">
-                <div class="fw-icon" style="background:rgba(139,92,246,.12);color:#8b5cf6">
-                    <i class="fa-solid fa-globe"></i>
-                </div>
-                <div class="fw-info">
-                    <div class="fw-name" style="color:#c4b5fd">الموقع الشخصي</div>
-                    <div class="fw-handle">keroles-sala.me</div>
-                </div>
-            </a>
-            <a href="mailto:keroles.salah.official@gmail.com" target="_blank" class="sl-full sl-em">
-                <div class="fw-icon" style="background:rgba(245,158,11,.12);color:#f59e0b">
-                    <i class="fa-solid fa-envelope"></i>
-                </div>
-                <div class="fw-info">
-                    <div class="fw-name" style="color:var(--gold)">الإيميل</div>
-                    <div class="fw-handle">keroles.salah.official</div>
-                </div>
-            </a>
+      <aside class="card profile-card" aria-labelledby="creator-name">
+        <div class="profile-head">
+          <div class="avatar" aria-hidden="true">KS</div>
+          <h2 id="creator-name">كيرلس صلاح فخري</h2>
+          <p class="role">Computer Science — Assiut University</p>
         </div>
+        <nav class="socials" aria-label="روابط كيرلس صلاح فخري">
+          <a class="social yt" href="https://www.youtube.com/@kerlssalah" target="_blank" rel="noopener noreferrer"><span class="icon">YT</span><span class="meta"><span class="name">YouTube</span><span class="handle">@kerlssalah</span></span><span class="arrow">‹</span></a>
+          <a class="social gh" href="https://github.com/keroles-salah" target="_blank" rel="noopener noreferrer"><span class="icon">GH</span><span class="meta"><span class="name">GitHub</span><span class="handle">keroles-salah</span></span><span class="arrow">‹</span></a>
+          <a class="social li" href="https://www.linkedin.com/in/kerolessalah05/" target="_blank" rel="noopener noreferrer"><span class="icon">IN</span><span class="meta"><span class="name">LinkedIn</span><span class="handle">kerolessalah05</span></span><span class="arrow">‹</span></a>
+          <a class="social pf" href="https://keroles-sala.me/" target="_blank" rel="noopener noreferrer"><span class="icon">WEB</span><span class="meta"><span class="name">الموقع الشخصي</span><span class="handle">keroles-sala.me</span></span><span class="arrow">‹</span></a>
+          <a class="social em" href="mailto:keroles.salah.official@gmail.com"><span class="icon">@</span><span class="meta"><span class="name">الإيميل</span><span class="handle">keroles.salah.official@gmail.com</span></span><span class="arrow">‹</span></a>
+        </nav>
+      </aside>
+    </main>
 
-
-    </div>
-
-    </div><!-- /creator-wrap -->
-
-    </div><!-- /columns -->
-
-
-
-</div>
-
-<script>
-// Generate stars
-const starsEl = document.getElementById('stars');
-for (let i = 0; i < 80; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    const size = Math.random() * 2.5 + 0.8;
-    star.style.cssText = `
-        width:${size}px;height:${size}px;
-        top:${Math.random()*100}%;left:${Math.random()*100}%;
-        --d:${Math.random()*3+2}s;
-        --delay:${Math.random()*5}s;
-    `;
-    starsEl.appendChild(star);
-}
-</script>
-
+    <footer class="footer">صُنعت هذه الصفحة بتقدير لكل الطلاب الذين استخدموا المنصة.</footer>
+  </div>
 </body>
 </html>
